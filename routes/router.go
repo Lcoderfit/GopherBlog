@@ -22,7 +22,7 @@ func InitRouter() {
 	r := gin.New()
 	r.HTMLRender = createMyRender()
 	//r.Use(middleware.Log())
-	// 第一个参数是URL路径，第二个参数是项目路径, 几个函数的区别是什么？？
+	// TODO: 第一个参数是URL路径，第二个参数是项目路径, 几个函数的区别是什么？？
 	r.Static("/static", "/static/front/static")
 	r.Static("/admin", "/static/admin")
 	r.StaticFile("/favicon.ico", "/static/front/favicon.ico")
