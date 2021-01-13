@@ -1,0 +1,2 @@
+[33mWARN[0m[2021-01-12 10:02:02]D:/PrivateProject/Blog-Tags/GopherBlog/main.go:44 main.main() something happened                            [33ma[0m=1 [33mb[0m="[luhu jisiyun]"
+time="2021-01-12 10:03:47" level=warning msg="something happened" func=main.main file="D:/PrivateProject/Blog-Tags/GopherBlog/main.go:44" a=1 b="[luhu jisiyun]"
