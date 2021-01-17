@@ -2,8 +2,9 @@ package errmsg
 
 // 状态码
 const (
-	SUCCESS = 200
-	ERROR   = 500
+	Success                = 200
+	Error                  = 500
+	UserAlreadyExistsError = 1001
 )
 
 // 状态码信息

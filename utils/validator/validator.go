@@ -11,7 +11,7 @@ import (
 )
 
 // 自定义验证器
-func Validate(data interface{}) (string, int) {
+func Validate(data interface{}) (string, error) {
 	// 1.声明一个通用的翻译器（针对各国语言都可以，所以是通用的）
 	// 2.unTrans.New()第一个参数是一个备用的翻译器，第二个参数是一个不定参数，表示设置该通用翻译器所支持的语言翻译器
 	//
@@ -31,12 +31,12 @@ func Validate(data interface{}) (string, int) {
 
 	// 创建验证器实例
 	validate := validator.New()
-	// 注册默认翻译器, 如果设置为英文会怎么样？？
+	// TODO:注册默认翻译器, 如果设置为英文会怎么样？？
 	err := zhTrans.RegisterDefaultTranslations(validate, trans)
 	if err != nil {
 		utils.Logger.Error("验证器设置翻译器失败：", err)
 	}
-	// 注册一个获取label tag的方法
+	// TODO:注册一个获取label tag的方法???
 	validate.RegisterTagNameFunc(func(field reflect.StructField) string {
 		label := field.Tag.Get("label")
 		return label
@@ -47,8 +47,8 @@ func Validate(data interface{}) (string, int) {
 		// 获取validator.ValidationErrors类型的errors
 		for _, v := range err.(validator.ValidationErrors) {
 			// 将错误信息翻译成对应的语言, 这里应该是只返回字段错误中的其中一个？？？？
-			return v.Translate(trans), errmsg.ERROR
+			return v.Translate(trans), nil
 		}
 	}
-	return "", errmsg.SUCCESS
+	return "", errmsg.Success
 }
