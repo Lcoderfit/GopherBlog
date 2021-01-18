@@ -20,8 +20,8 @@ func AddUser(c *gin.Context) {
 		utils.Logger.Error("参数输入错误： ", err)
 	}
 
-	msg, code := validator.Validate(data)
-	if code != errmsg.Success {
+	msg, err := validator.Validate(data)
+	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"status":  code,
 			"message": msg,
