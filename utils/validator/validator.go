@@ -2,7 +2,7 @@ package validator
 
 import (
 	"GopherBlog/utils"
-	"GopherBlog/utils/errmsg"
+	"errors"
 	"github.com/go-playground/locales/zh_Hans_CN"
 	unTrans "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
@@ -35,6 +35,7 @@ func Validate(data interface{}) (string, error) {
 	err := zhTrans.RegisterDefaultTranslations(validate, trans)
 	if err != nil {
 		utils.Logger.Error("验证器设置翻译器失败：", err)
+		return "", err
 	}
 	// TODO:注册一个获取label tag的方法???
 	validate.RegisterTagNameFunc(func(field reflect.StructField) string {
@@ -47,8 +48,8 @@ func Validate(data interface{}) (string, error) {
 		// 获取validator.ValidationErrors类型的errors
 		for _, v := range err.(validator.ValidationErrors) {
 			// 将错误信息翻译成对应的语言, 这里应该是只返回字段错误中的其中一个？？？？
-			return v.Translate(trans), nil
+			return v.Translate(trans), errors.New(v.Error())
 		}
 	}
-	return "", errmsg.Success
+	return "", nil
 }
