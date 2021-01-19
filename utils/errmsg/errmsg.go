@@ -8,7 +8,12 @@ const (
 )
 
 // 状态码信息
-var codeMsg = map[int]string{}
+var codeMsg = map[int]string{
+	Success: "success",
+	Error: "error",
+
+	UserAlreadyExistsError: "用户已存在",
+}
 
 func GetCodeMsg(code int) string {
 	return codeMsg[code]

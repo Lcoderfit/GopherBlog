@@ -2,7 +2,6 @@ package validator
 
 import (
 	"GopherBlog/utils"
-	"errors"
 	"github.com/go-playground/locales/zh_Hans_CN"
 	unTrans "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
@@ -27,17 +26,20 @@ func Validate(data interface{}) (string, error) {
 	// 当local为"zh_Hans_CN"则返回中文翻译器
 	//
 	// 2.第二个参数返回一个bool值，如果在通用翻译器中找到了传入参数所对应的翻译器，则返回true，否则返回false
+	//trans, _ := uni.GetTranslator("zh_Hans_CN")
 	trans, _ := uni.GetTranslator("zh_Hans_CN")
 
 	// 创建验证器实例
 	validate := validator.New()
-	// TODO:注册默认翻译器, 如果设置为英文会怎么样？？
+	// 为内置标签注册一组默认的翻译器，可以理解zhTrans表示内置标签的中文翻译,
+	// 而RegisterDefaultTranslations的作用是为翻译器trans加上内置标签的中文翻译
 	err := zhTrans.RegisterDefaultTranslations(validate, trans)
 	if err != nil {
 		utils.Logger.Error("验证器设置翻译器失败：", err)
-		return "", err
 	}
-	// TODO:注册一个获取label tag的方法???
+	// 注册一个获取label tag的方法，这样返回的验证器校验后的字段错误信息中会使用字段的label名称
+	// 例如： User模型中的username的label为“用户名”，则如果该字段设置为长度在4到6之间，则打印信息为：用户名长度必须至少为4个字符
+	// 而不是username长度必须至少4个字符
 	validate.RegisterTagNameFunc(func(field reflect.StructField) string {
 		label := field.Tag.Get("label")
 		return label
@@ -48,7 +50,7 @@ func Validate(data interface{}) (string, error) {
 		// 获取validator.ValidationErrors类型的errors
 		for _, v := range err.(validator.ValidationErrors) {
 			// 将错误信息翻译成对应的语言, 这里应该是只返回字段错误中的其中一个？？？？
-			return v.Translate(trans), errors.New(v.Error())
+			return v.Translate(trans), err
 		}
 	}
 	return "", nil
