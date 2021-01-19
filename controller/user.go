@@ -23,15 +23,22 @@ func AddUser(c *gin.Context) {
 	msg, err := validator.Validate(data)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"status":  code,
+			"status":  errmsg.Error,
 			"message": msg,
 		})
 		// 当上面的响应报错时，调用c.Abort()可以确保其不会影响下面的请求处理程序
 		c.Abort()
 	}
 
-	code = model.CheckUserIsExists(data.Username)
-	if code == errmsg.UserAlreadyExistsError {
+	var code int
+	if ok := model.IsUserExists(data.Username); ok {
+		code = errmsg.UserAlreadyExistsError
+	} else {
+		code = errmsg.Success
 		model.CreateUser(&data)
 	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": code,
+		"message": errmsg.GetCodeMsg(code),
+	})
 }
