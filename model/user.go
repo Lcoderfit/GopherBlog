@@ -1,7 +1,6 @@
 package model
 
 import (
-	"GopherBlog/utils/errmsg"
 	"gorm.io/gorm"
 )
 
@@ -19,7 +18,7 @@ type User struct {
 }
 
 // 检查用户是否存在
-func CheckUserIsExists(name string) (code int) {
+func IsUserExists(name string) bool {
 	var user User
 	// 1.字段名用数据库字段名称或者模型中的字段名都可以
 	//
@@ -30,7 +29,12 @@ func CheckUserIsExists(name string) (code int) {
 	// 3.Take相当于:limit 1， First相当于：order by id limit 1, 所以一般Take效率比较高
 	db.Select("id").Where("username = ?", name).Take(&user)
 	if user.ID > 0 {
-		return errmsg.UserAlreadyExistsError
+		return true
 	}
-	return errmsg.Success
+	return false
 }
+
+// 创建新用户
+//func CreateUser(user *User) error {
+//	db.Cre
+//}

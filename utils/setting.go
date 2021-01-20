@@ -9,8 +9,8 @@ import (
 var Logger = logrus.New()
 
 var (
-	ServerCfg   *ServerConfig
-	DatabaseCfg *DatabaseConfig
+	ServerCfg   = new(ServerConfig)
+	DatabaseCfg = new(DatabaseConfig)
 )
 
 // 服务器配置
@@ -37,11 +37,12 @@ func init() {
 		TimestampFormat: "2006-01-02 15:04:05",
 	})
 	// 设置日志级别， logrus默认级别是什么？？
+	// 当使用Fatal及以上级别打印日志消息时，调用Fatal或Panic函数，在调用位置之后的程序将不会执行
 	Logger.SetLevel(logrus.DebugLevel)
 	// 设置打印信息中显示调用打印语句的函数所在的文件路径及函数名和在文件中的哪一行
 	Logger.SetReportCaller(true)
 
-	cfg, err := ini.Load("../config/config.ini")
+	cfg, err := ini.Load("./config/config.ini")
 	if err != nil {
 		Logger.Error("config.ini读取错误: ", err)
 	}
