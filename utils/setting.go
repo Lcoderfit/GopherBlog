@@ -9,7 +9,7 @@ import (
 var Logger = logrus.New()
 
 var (
-	ServerCfg = new(ServerConfig)
+	ServerCfg   = new(ServerConfig)
 	DatabaseCfg = new(DatabaseConfig)
 )
 

@@ -10,7 +10,7 @@ const (
 // 状态码信息
 var codeMsg = map[int]string{
 	Success: "success",
-	Error: "error",
+	Error:   "error",
 
 	UserAlreadyExistsError: "用户已存在",
 }
