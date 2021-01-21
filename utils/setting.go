@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"GopherBlog/constant"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
 )
@@ -44,14 +45,14 @@ func init() {
 
 	cfg, err := ini.Load("./config/config.ini")
 	if err != nil {
-		Logger.Error("config.ini读取错误: ", err)
+		Logger.Error(constant.ConvertForLog(constant.ReadConfigFileError), err)
 	}
 	err = cfg.Section("server").MapTo(ServerCfg)
 	if err != nil {
-		Logger.Error("读取server配置错误: ", err)
+		Logger.Error(constant.ConvertForLog(constant.ReadServerConfigError), err)
 	}
 	err = cfg.Section("database").MapTo(DatabaseCfg)
 	if err != nil {
-		Logger.Error("读取database配置错误： ", err)
+		Logger.Error(constant.ConvertForLog(constant.ReadDatabaseConfigError), err)
 	}
 }

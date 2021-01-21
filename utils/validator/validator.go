@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"GopherBlog/constant"
 	"GopherBlog/utils"
 	"github.com/go-playground/locales/zh_Hans_CN"
 	unTrans "github.com/go-playground/universal-translator"
@@ -35,7 +36,7 @@ func Validate(data interface{}) (string, error) {
 	// 而RegisterDefaultTranslations的作用是为翻译器trans加上内置标签的中文翻译
 	err := zhTrans.RegisterDefaultTranslations(validate, trans)
 	if err != nil {
-		utils.Logger.Error("验证器设置翻译器失败：", err)
+		utils.Logger.Error(constant.ConvertForLog(constant.SetValidatorError), err)
 	}
 	// 注册一个获取label tag的方法，这样返回的验证器校验后的字段错误信息中会使用字段的label名称
 	// 例如： User模型中的username的label为“用户名”，则如果该字段设置为长度在4到6之间，则打印信息为：用户名长度必须至少为4个字符
