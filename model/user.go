@@ -1,6 +1,8 @@
 package model
 
 import (
+	"GopherBlog/constant"
+	"GopherBlog/utils"
 	"gorm.io/gorm"
 )
 
@@ -23,7 +25,7 @@ func IsUserExists(name string) bool {
 	// 1.字段名用数据库字段名称或者模型中的字段名都可以
 	//
 	// 2.Take、First、Find这些函数会根据传入参数选择查询对应的表，例如Take(&user)表示选择user表，并且将查询结果存放到user中
-	// 应为Take和First只查询单条数据，所以user中会存储查询到的值，也可以用 result := .....Take(&user)来获取查询到的结果数量,
+	// 因为Take和First只查询单条数据，所以user中会存储查询到的值，也可以用 result := .....Take(&user)来获取查询到的结果数量,
 	// 但是Find会查询多条数据，需要传入users（user类型的切片）作为参数来存储多个值，result.RowsAffected表示查询到的数据条数
 	//
 	// 3.Take相当于:limit 1， First相当于：order by id limit 1, 所以一般Take效率比较高
@@ -35,6 +37,40 @@ func IsUserExists(name string) bool {
 }
 
 // 创建新用户
-//func CreateUser(user *User) error {
-//	db.Cre
-//}
+func CreateUser(data *User) error {
+	err := db.Create(data).Error
+	if err != nil {
+		utils.Logger.Error(constant.CreateUserError, err)
+		return err
+	}
+	return nil
+}
+
+// 通过用户ID获取用户数据
+func GetUserInfoById(id int) (User, error) {
+	var user User
+	err := db.Where("id = ?", id).Take(&user).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.GetUserInfoError), err)
+		return user, err
+	}
+	return user, nil
+}
+
+// 获取用户列表
+// 可能存储非常多的数据，total需要用长整型
+func GetUserList(pageSize, pageNum int, username string) (users []User, total int64, err error) {
+	if username != "" {
+		err = db.Select("id, user, role").Where(
+			"username like ?", "%"+username+"%",
+		).Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
+	} else {
+		err = db.Select("id, username, role").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
+	}
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.GetUserListError), err)
+		return nil, total, err
+	}
+	total = int64(len(users))
+	return users, total, nil
+}

@@ -47,7 +47,7 @@ func InitRouter() {
 		// 用户信息模块
 		router.POST("/user/add", controller.AddUser)
 		router.GET("/user:id", controller.GetUserInfo)
-		router.GET("/users", controller.GetUsers)
+		router.GET("/users", controller.GetUserList)
 
 		// 获取个人信息
 		router.POST("/profile:id", controller.GetProfile)
