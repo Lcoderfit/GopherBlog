@@ -25,6 +25,8 @@ const (
 	CreateUserError        = 20102
 	GetUserInfoError       = 20103
 	GetUserListError       = 20104
+	UsernameNotExistsError = 20105
+	UserPasswordError      = 20106
 )
 
 // 状态码信息
@@ -46,6 +48,8 @@ var CodeMsg = map[int]string{
 	CreateUserError:        "用户创建失败",
 	GetUserInfoError:       "获取用户信息失败",
 	GetUserListError:       "获取用户列表失败",
+	UsernameNotExistsError: "用户名不存在",
+	UserPasswordError:      "密码错误",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息
