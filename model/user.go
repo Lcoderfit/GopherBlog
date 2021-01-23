@@ -36,7 +36,7 @@ func IsUserExists(name string) bool {
 	return false
 }
 
-// 创建新用户
+// 创建新用户, 不对密码进行加密吗
 func CreateUser(data *User) error {
 	err := db.Create(data).Error
 	if err != nil {
@@ -73,4 +73,17 @@ func GetUserList(pageSize, pageNum int, username string) (users []User, total in
 	}
 	total = int64(len(users))
 	return users, total, nil
+}
+
+// 检查账户密码是否正确
+func CheckAccount(username, password string) (user User, code int, err error) {
+	err = db.Where("username = ?", username).Take(&user).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.UsernameNotExistsError), err)
+		return user, constant.UsernameNotExistsError, err
+	}
+	if user.Password != password {
+		utils.Logger.Error(constant.ConvertForLog(constant.UserPasswordError), err)
+		return User{}, constant.UserPasswordError,
+	}
 }
