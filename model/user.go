@@ -3,6 +3,8 @@ package model
 import (
 	"GopherBlog/constant"
 	"GopherBlog/utils"
+	"errors"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -36,7 +38,7 @@ func IsUserExists(name string) bool {
 	return false
 }
 
-// 创建新用户, 不对密码进行加密吗
+// 创建新用户, 实现BeforeSave和BeforeUpdate接口，对密码进行创建和更新时都会自动进行加密
 func CreateUser(data *User) error {
 	err := db.Create(data).Error
 	if err != nil {
@@ -44,6 +46,37 @@ func CreateUser(data *User) error {
 		return err
 	}
 	return nil
+}
+
+// 保存密码到数据库中时，自动对密码进行加密
+func (u *User) BeforeSave(_ *gorm.DB) (err error) {
+	u.Password, err = EncryptPassword(u.Password)
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.SavePasswordError))
+		return
+	}
+	return
+}
+
+// 更新密码在保存到数据库之前自动对密码进行加密
+func (u *User) BeforeUpdate(_ *gorm.DB) (err error) {
+	u.Password, err = EncryptPassword(u.Password)
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.UpdatePasswordError), err)
+		return
+	}
+	return
+}
+
+// 对密码进行bcrypt加密
+func EncryptPassword(password string) (string, error) {
+	const cost = 10
+	hashPwd, err := bcrypt.GenerateFromPassword([]byte(password), cost)
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.EncryptPasswordError), err)
+		return "", err
+	}
+	return string(hashPwd), nil
 }
 
 // 通过用户ID获取用户数据
@@ -79,11 +112,23 @@ func GetUserList(pageSize, pageNum int, username string) (users []User, total in
 func CheckAccount(username, password string) (user User, code int, err error) {
 	err = db.Where("username = ?", username).Take(&user).Error
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.UsernameNotExistsError), err)
-		return user, constant.UsernameNotExistsError, err
+		utils.Logger.Error(constant.ConvertForLog(constant.DatabaseAccessError), err)
+		return user, constant.DatabaseAccessError, err
 	}
-	if user.Password != password {
+	if user.ID == 0 {
+		utils.Logger.Error(constant.ConvertForLog(constant.UsernameNotExistsError))
+		return user, constant.UsernameNotExistsError, errors.New("")
+	}
+
+	// 判断密码是否是已加密密码对应的明文
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.UserPasswordError), err)
-		return User{}, constant.UserPasswordError,
+		return user, constant.UserPasswordError, err
 	}
+	if user.Role != 1 {
+		utils.Logger.Error(constant.ConvertForLog(constant.UserRoleError), err)
+		return user, constant.UserRoleError, errors.New("")
+	}
+	return user, constant.SuccessCode, nil
 }

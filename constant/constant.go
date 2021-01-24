@@ -20,6 +20,8 @@ const (
 	ReadServerConfigError   = 10006
 	ReadDatabaseConfigError = 10007
 
+	DatabaseAccessError = 10008
+
 	// 普通级别错误-01用户模块
 	UserAlreadyExistsError = 20101
 	CreateUserError        = 20102
@@ -27,6 +29,10 @@ const (
 	GetUserListError       = 20104
 	UsernameNotExistsError = 20105
 	UserPasswordError      = 20106
+	EncryptPasswordError   = 20107
+	SavePasswordError      = 20108
+	UpdatePasswordError    = 20109
+	UserRoleError          = 20110
 )
 
 // 状态码信息
@@ -43,6 +49,8 @@ var CodeMsg = map[int]string{
 	ReadServerConfigError:   "读取server配置错误",
 	ReadDatabaseConfigError: "读取database配置错误",
 
+	DatabaseAccessError: "数据库访问异常",
+
 	// 模块级别错误
 	UserAlreadyExistsError: "用户已存在",
 	CreateUserError:        "用户创建失败",
@@ -50,6 +58,10 @@ var CodeMsg = map[int]string{
 	GetUserListError:       "获取用户列表失败",
 	UsernameNotExistsError: "用户名不存在",
 	UserPasswordError:      "密码错误",
+	EncryptPasswordError:   "密码加密错误",
+	SavePasswordError:      "密码保存失败",
+	UpdatePasswordError:    "密码更新失败",
+	UserRoleError:          "用户角色码错误",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息
