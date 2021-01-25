@@ -10,6 +10,7 @@ import (
 var Logger = logrus.New()
 
 var (
+	JwtKey      string
 	ServerCfg   = new(ServerConfig)
 	DatabaseCfg = new(DatabaseConfig)
 )
@@ -55,4 +56,6 @@ func init() {
 	if err != nil {
 		Logger.Error(constant.ConvertForLog(constant.ReadDatabaseConfigError), err)
 	}
+	// 获取jwt加密密钥
+	JwtKey = cfg.Section("server").Key("JwtKey").String()
 }

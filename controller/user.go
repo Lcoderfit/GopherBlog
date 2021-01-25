@@ -23,6 +23,7 @@ func AddUser(c *gin.Context) {
 
 	msg, err := validator.Validate(data)
 	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.DataVerificationError), err)
 		failWithData(c, constant.DataVerificationError, msg)
 		// 当上面的响应报错时，调用c.Abort()可以确保其不会影响下面的请求处理程序
 		//c.Abort()

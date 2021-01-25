@@ -40,6 +40,9 @@ func InitRouter() {
 	// 设置路由组，定义无需鉴权的接口
 	router := r.Group("api/v1")
 	{
+
+		// 验证token
+		router.POST("/admin/check_token")
 		// 登录模块
 		router.POST("/login", controller.Login)
 		router.POST("/login_front", controller.LoginFront)

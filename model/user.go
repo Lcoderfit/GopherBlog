@@ -3,7 +3,6 @@ package model
 import (
 	"GopherBlog/constant"
 	"GopherBlog/utils"
-	"errors"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -14,8 +13,10 @@ type User struct {
 	// 这样自己的模型就带有ID（主键）、CreateAt、UpdateAt、DeleteAt等的字段
 	// 自增ID作为主键，默认从1开始自增
 	gorm.Model
-	// gorm标签后面的每个子标签名与设置的值格式为 -》 gorm:"tag1:v1;tag2:v2"
-	// validate标签格式： validate:"tag1,tag2=v2,tag3=v3"
+	// 1.gorm标签后面的每个子标签名与设置的值格式为 -》 gorm:"tag1:v1;tag2:v2"
+	// 2.validate标签格式： validate:"tag1,tag2=v2,tag3=v3"
+	// 3.json标签定义的是结构体转换为json数据时对应的字段名称
+	// 4.设置结构体时注意字段对应的gorm标签类型，例如什么时候设主键，什么时候需要设置primary_key,什么时候设not null
 	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=12" label:"用户名"`
 	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=6,max=20" label:"密码"`
 	Role     int    `gorm:"type:int;default:2" json:"role" validate:"required,gte=2" label:"角色码"`
@@ -109,26 +110,26 @@ func GetUserList(pageSize, pageNum int, username string) (users []User, total in
 }
 
 // 检查账户密码是否正确
-func CheckAccount(username, password string) (user User, code int, err error) {
+func CheckAccount(username, password string) (user User, code int) {
 	err = db.Where("username = ?", username).Take(&user).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.DatabaseAccessError), err)
-		return user, constant.DatabaseAccessError, err
+		return user, constant.DatabaseAccessError
 	}
 	if user.ID == 0 {
 		utils.Logger.Error(constant.ConvertForLog(constant.UsernameNotExistsError))
-		return user, constant.UsernameNotExistsError, errors.New("")
+		return user, constant.UsernameNotExistsError
 	}
 
 	// 判断密码是否是已加密密码对应的明文
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.UserPasswordError), err)
-		return user, constant.UserPasswordError, err
+		return user, constant.UserPasswordError
 	}
 	if user.Role != 1 {
 		utils.Logger.Error(constant.ConvertForLog(constant.UserRoleError), err)
-		return user, constant.UserRoleError, errors.New("")
+		return user, constant.UserRoleError
 	}
-	return user, constant.SuccessCode, nil
+	return user, constant.SuccessCode
 }
