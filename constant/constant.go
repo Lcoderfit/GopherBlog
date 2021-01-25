@@ -33,6 +33,16 @@ const (
 	SavePasswordError      = 20108
 	UpdatePasswordError    = 20109
 	UserRoleError          = 20110
+
+	// 普通级别错误-02中间件模块
+	SetTokenError       = 20201
+	TokenMalformedError = 20202
+	TokenInvalidError   = 20203
+	CheckTokenError     = 20204
+	TokenIsNilError     = 20205
+
+	// 普通级别错误-03个人信息模块
+	GetProfileInfoError = 20301
 )
 
 // 状态码信息
@@ -62,6 +72,16 @@ var CodeMsg = map[int]string{
 	SavePasswordError:      "密码保存失败",
 	UpdatePasswordError:    "密码更新失败",
 	UserRoleError:          "用户角色码错误",
+
+	// 普通级别错误-02中间件模块
+	SetTokenError:       "token设置失败",
+	TokenMalformedError: "token格式错误",
+	TokenInvalidError:   "token已失效",
+	CheckTokenError:     "token不正确",
+	TokenIsNilError:     "token不存在",
+
+	// 普通级别错误-03个人信息模块
+	GetProfileInfoError: "个人信息获取失败",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息
