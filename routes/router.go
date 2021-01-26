@@ -45,7 +45,7 @@ func InitRouter() {
 		router.POST("/admin/check_token")
 		// 登录模块
 		router.POST("/login", controller.Login)
-		router.POST("/login_front", controller.LoginFront)
+		//router.POST("/login_front", controller.LoginFront)
 
 		// 用户信息模块
 		router.POST("/user/add", controller.AddUser)
@@ -56,13 +56,13 @@ func InitRouter() {
 		router.POST("/profile:id", controller.GetProfile)
 
 		// 文章分类模块
-		router.GET("/categories", controller.GetCatefories)
-		router.GET("/category:id", controler.GetCategoryInfo)
+		router.GET("/categories", controller.GetCategoryList)
+		router.GET("/category:id", controller.GetCategoryInfo)
 
 		// 文章模块
-		router.POST("/article/add", controller.CreateArticle)
-		router.GET("/article:id", controller.GetArticleInfo)
-		router.GET("/articles", controller.GetArticles)
+		//router.POST("/article/add", controller.CreateArticle)
+		//router.GET("/article:id", controller.GetArticleInfo)
+		//router.GET("/articles", controller.GetArticles)
 
 		// 评论模块
 	}

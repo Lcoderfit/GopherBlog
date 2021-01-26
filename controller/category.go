@@ -6,6 +6,7 @@ import (
 	"GopherBlog/utils"
 	"GopherBlog/utils/validator"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 // 添加文章分类
@@ -22,5 +23,60 @@ func AddCategory(c *gin.Context) {
 	}
 
 	// 检查分类名称是否已经存在
+	code, ok := model.IsCategoryExist(data.Name)
+	if ok {
+		fail(c, code)
+	}
 
+	code = model.CreateCategory(&data)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	// TODO:为什么需要返回data
+	successWithData(c, data)
+}
+
+// 获取分类信息
+func GetCategoryInfo(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+	data, code := model.GetCategoryInfo(id)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	successWithData(c, data)
+}
+
+// 获取分类列表
+func GetCategoryList(c *gin.Context) {
+	pageNum, err := strconv.Atoi(c.Param("pageNum"))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+	pageSize, err := strconv.Atoi(c.Param("pageSize"))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+
+	// 设置每页的数据量上下限
+	if pageSize < 10 {
+		pageSize = 10
+	} else if pageSize > 100 {
+		pageSize = 100
+	}
+	if pageNum < 0 {
+		pageNum = 1
+	}
+
+	// 获取分类列表
+	categories, code := model.GetCategoryList(pageSize, pageNum)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	successWithData(c, categories)
 }

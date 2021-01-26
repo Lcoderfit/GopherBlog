@@ -29,7 +29,7 @@ func AddUser(c *gin.Context) {
 		//c.Abort()
 	}
 
-	if ok := model.IsUserExists(data.Username); ok {
+	if ok := model.IsUserExist(data.Username); ok {
 		// 能否重写Info函数
 		utils.Logger.Info(constant.ConvertForLog(constant.UserAlreadyExistsError))
 		fail(c, constant.UserAlreadyExistsError)
