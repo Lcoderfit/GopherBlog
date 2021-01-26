@@ -49,20 +49,21 @@ func InitRouter() {
 
 		// 用户信息模块
 		router.POST("/user/add", controller.AddUser)
-		router.GET("/user:id", controller.GetUserInfo)
+		router.GET("/user/:id", controller.GetUserInfo)
 		router.GET("/users", controller.GetUserList)
 
 		// 获取个人信息
-		router.POST("/profile:id", controller.GetProfile)
+		router.GET("/profile/:id", controller.GetProfile)
 
 		// 文章分类模块
 		router.GET("/categories", controller.GetCategoryList)
-		router.GET("/category:id", controller.GetCategoryInfo)
+		router.GET("/category/:id", controller.GetCategoryInfo)
 
 		// 文章模块
 		//router.POST("/article/add", controller.CreateArticle)
-		//router.GET("/article:id", controller.GetArticleInfo)
-		//router.GET("/articles", controller.GetArticles)
+		router.GET("/article/info/:id", controller.GetArticleInfo)
+		router.GET("/articles", controller.GetArticles)
+		router.GET("/article/list/:id", controller.GetArticleInfo) // 获取同一分类的所有文章
 
 		// 评论模块
 	}
