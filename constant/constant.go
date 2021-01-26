@@ -44,11 +44,14 @@ const (
 	// 普通级别错误-03个人信息模块
 	GetProfileInfoError = 20301
 
-	// 普通级别模块错误-04文章分类模块
+	// 普通级别错误-04文章分类模块
 	CategoryExistError   = 20401
 	CreateCategoryError  = 20402
 	GetCategoryInfoError = 20403
 	CategoryNotExist     = 20404
+
+	// 普通级别错误-05文章分类模块
+	GetArticleInfoError = 20501
 )
 
 // 状态码信息
@@ -94,6 +97,9 @@ var CodeMsg = map[int]string{
 	CreateCategoryError:  "新增分类失败",
 	GetCategoryInfoError: "分类获取失败",
 	CategoryNotExist:     "分类不存在",
+
+	// 普通级别错误-05文章模块
+	GetArticleInfoError: "文章信息获取失败",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息
