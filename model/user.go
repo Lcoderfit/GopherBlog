@@ -23,7 +23,7 @@ type User struct {
 }
 
 // 检查用户是否存在
-func IsUserExists(name string) bool {
+func IsUserExist(name string) bool {
 	var user User
 	// 1.字段名用数据库字段名称或者模型中的字段名都可以
 	//
@@ -43,7 +43,7 @@ func IsUserExists(name string) bool {
 func CreateUser(data *User) error {
 	err := db.Create(data).Error
 	if err != nil {
-		utils.Logger.Error(constant.CreateUserError, err)
+		utils.Logger.Error(constant.ConvertForLog(constant.CreateUserError), err)
 		return err
 	}
 	return nil
