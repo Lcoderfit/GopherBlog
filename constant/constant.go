@@ -39,7 +39,7 @@ const (
 	TokenMalformedError = 20202
 	TokenInvalidError   = 20203
 	CheckTokenError     = 20204
-	TokenIsNilError     = 20205
+	TokenNotExistError  = 20205
 
 	// 普通级别错误-03个人信息模块
 	GetProfileInfoError = 20301
@@ -98,7 +98,7 @@ var CodeMsg = map[int]string{
 	TokenMalformedError: "token格式错误",
 	TokenInvalidError:   "token已失效",
 	CheckTokenError:     "token不正确",
-	TokenIsNilError:     "token不存在",
+	TokenNotExistError:  "token不存在",
 
 	// 普通级别错误-03个人信息模块
 	GetProfileInfoError: "个人信息获取失败",

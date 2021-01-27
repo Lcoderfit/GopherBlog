@@ -5,6 +5,9 @@ import (
 	"GopherBlog/utils"
 	"errors"
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strings"
 	"time"
 )
 
@@ -65,10 +68,55 @@ func CheckToken(token string) (*MyClaim, int, error) {
 	}
 
 	if parsedJwt == nil {
-		return nil, constant.TokenIsNilError, err
+		return nil, constant.TokenNotExistError, err
 	}
 	if key, ok := parsedJwt.Claims.(*MyClaim); ok && parsedJwt.Valid {
 		return key, constant.SuccessCode, nil
 	}
 	return nil, constant.CheckTokenError, errors.New("")
+}
+
+// jwt中间件
+// TODO：将c.JSON替换为响应函数
+func JwtToken() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Authorization: 授权
+		tokenHeader := c.Request.Header.Get("Authorization")
+		code := constant.TokenNotExistError
+		// token不存在
+		if tokenHeader == "" {
+			c.JSON(http.StatusOK, gin.H{
+				"code":  code,
+				"error": constant.CodeMsg[code],
+			})
+			// 直接返回，该中间件中c.Abort()后面的部分将不再执行，当在该中间件之后的其他中间件还是会执行
+			c.Abort()
+			// TODO:为什么还要return
+			return
+		}
+		// 正常的规则为： bearer xxxxxxx
+		tokenInfo := strings.Split(tokenHeader, " ")
+		if len(tokenInfo) != 2 || tokenInfo[0] != "bearer" {
+			code = constant.TokenMalformedError
+			c.JSON(http.StatusOK, gin.H{
+				"code":  code,
+				"error": constant.CodeMsg[code],
+			})
+			c.Abort()
+			return
+		}
+
+		myClaim, code, err := CheckToken(tokenInfo[1])
+		if err != nil {
+			c.JSON(http.StatusOK, gin.H{
+				"code":  code,
+				"error": constant.CodeMsg[code],
+			})
+			c.Abort()
+			return
+		}
+		// 设置会话变量
+		c.Set("username", myClaim)
+		return
+	}
 }
