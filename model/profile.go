@@ -7,7 +7,7 @@ import (
 
 // 个人信息
 type Profile struct {
-	ID     int    `gorm:"primary_key" json:"id"`
+	ID     int    `gorm:"primaryKey" json:"id"`
 	Name   string `gorm:"type:varchar(20)" json:"name"`
 	Desc   string `gorm:"type:varchar(200)" json:"desc"`
 	QqChat string `gorm:"type:varchar(200)" json:"qq_chat"`

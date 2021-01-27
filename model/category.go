@@ -6,7 +6,7 @@ import (
 )
 
 type Category struct {
-	ID   int    `gorm:"primary_key;auto_increment" json:"id"`
+	ID   int    `gorm:"primaryKey;autoIncrement" json:"id"`
 	Name string `gorm:"type:varchar(20);not null" json:"name"`
 }
 
