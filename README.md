@@ -19,4 +19,4 @@ Q:
 5.利用pporf分析性能
 6.压测工具
 7.什么时候返回error，什么时候返回panic
-8.json tag用下划线命名法，其他用大小驼峰，router用什么命名法？？
+8.json tag用下划线命名法，gorm标签用小驼峰，其他用大小驼峰，router用什么命名法？？
