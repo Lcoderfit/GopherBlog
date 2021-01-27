@@ -20,3 +20,6 @@ Q:
 6.压测工具
 7.什么时候返回error，什么时候返回panic
 8.json tag用下划线命名法，gorm标签用小驼峰，其他用大小驼峰，router用什么命名法？？
+9.GraphQL替换RESTful， grpc等等
+10.controller的参数获取需要修改成全部按照ShouldJSONBind接收
+11.需要有两个系统,一个用于用户使用的系统,另一个用来给管理员使用
