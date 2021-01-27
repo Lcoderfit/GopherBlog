@@ -62,10 +62,11 @@ func InitRouter() {
 		// 文章模块
 		//router.POST("/article/add", controller.CreateArticle)
 		router.GET("/article/info/:id", controller.GetArticleInfo)
-		router.GET("/articles", controller.GetArticles)
-		router.GET("/article/list/:id", controller.GetArticleInfo) // 获取同一分类的所有文章
+		router.GET("/articles", controller.GetArticleList)
+		router.GET("/article/list/:id", controller.GetArticleListByCategoryId) // 获取同一分类的所有文章
 
 		// 评论模块
+
 	}
 
 	// 运行项目

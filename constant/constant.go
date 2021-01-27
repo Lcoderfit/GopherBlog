@@ -50,8 +50,12 @@ const (
 	GetCategoryInfoError = 20403
 	CategoryNotExist     = 20404
 
-	// 普通级别错误-05文章分类模块
-	GetArticleInfoError = 20501
+	// 普通级别错误-05文章模块
+	ArticleNotExistError            = 20501
+	UpdateReadCountError            = 20502
+	GetArticleListInfoError         = 20503
+	CountArticleListError           = 20504
+	GetArticleListByCategoryIdError = 20505
 )
 
 // 状态码信息
@@ -99,7 +103,11 @@ var CodeMsg = map[int]string{
 	CategoryNotExist:     "分类不存在",
 
 	// 普通级别错误-05文章模块
-	GetArticleInfoError: "文章信息获取失败",
+	ArticleNotExistError:            "文章信息获取失败",
+	UpdateReadCountError:            "阅读量更新失败",
+	GetArticleListInfoError:         "文章列表获取失败",
+	CountArticleListError:           "文章列表总数获取失败",
+	GetArticleListByCategoryIdError: "该分类文章列表获取失败",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息
