@@ -37,6 +37,7 @@ func InitRouter() {
 		c.HTML(http.StatusOK, "admin", nil)
 	})
 
+	// TODO:需要重构成RESTful API
 	// 设置路由组，定义无需鉴权的接口
 	router := r.Group("api/v1")
 	{
@@ -66,7 +67,10 @@ func InitRouter() {
 		router.GET("/article/list/:id", controller.GetArticleListByCategoryId) // 获取同一分类的所有文章
 
 		// 评论模块
-
+		router.POST("/comment/add", controller.AddComment)
+		router.GET("/comment/info/:id", controller.GetCommentInfo)
+		router.GET("/comment_count", controller.GetCommentCount)
+		router.GET("/comment/list/:id", controller.GetCommentList)
 	}
 
 	// 运行项目
