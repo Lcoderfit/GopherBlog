@@ -32,3 +32,14 @@ func GetProfileInfo(id int) (Profile, int) {
 	}
 	return data, constant.SuccessCode
 }
+
+// 更新个人信息
+func UpdateProfileInfo(id int, data *Profile) int {
+	err := db.Model(&Profile{}).Where("id = ?", id).Updates(&data).Error
+	if err != nil {
+		// TODO：是否可以简化多出出现err code的情况
+		utils.Logger.Error(constant.ConvertForLog(constant.UpdateProfileInfoError), err)
+		return constant.UpdateProfileInfoError
+	}
+	return constant.SuccessCode
+}

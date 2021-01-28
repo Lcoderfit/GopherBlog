@@ -45,7 +45,8 @@ const (
 	TokenNotExistError  = 20205
 
 	// 普通级别错误-03个人信息模块
-	GetProfileInfoError = 20301
+	GetProfileInfoError    = 20301
+	UpdateProfileInfoError = 20302
 
 	// 普通级别错误-04文章分类模块
 	CategoryExistError    = 20401
@@ -108,7 +109,8 @@ var CodeMsg = map[int]string{
 	TokenNotExistError:  "token不存在",
 
 	// 普通级别错误-03个人信息模块
-	GetProfileInfoError: "个人信息获取失败",
+	GetProfileInfoError:    "个人信息获取失败",
+	UpdateProfileInfoError: "个人信息更新错误",
 
 	// 普通级别错误-04文章分类模块
 	CategoryExistError:    "分类已存在",

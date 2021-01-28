@@ -49,11 +49,19 @@ func InitRouter() {
 		auth.PUT("/user/:id", controller.EditUserInfo)
 		auth.DELETE("/user/:id", controller.DeleteUser)
 
+		// 个人信息模块
+		// TODO:更改为GetProfileInfo??
+		auth.GET("/admin/profile/:id", controller.GetProfileInfo)
+		auth.PUT("/profile/:id", controller.UpdateProfileInfo)
+
 		// 分类功能
 		auth.GET("/admin/categories", controller.GetCategoryList)
 		auth.POST("/category/add", controller.AddCategory)
 		auth.PUT("/category/:id", controller.EditCategoryInfo)
 		auth.DELETE("/category/:id", controller.DeleteCategory)
+
+		// 文章模块
+
 	}
 
 	// TODO:需要重构成RESTful API
