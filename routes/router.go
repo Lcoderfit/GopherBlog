@@ -49,8 +49,11 @@ func InitRouter() {
 		auth.PUT("/user/:id", controller.EditUserInfo)
 		auth.DELETE("/user/:id", controller.DeleteUser)
 
-		//
-
+		// 分类功能
+		auth.GET("/admin/categories", controller.GetCategoryList)
+		auth.POST("/category/add", controller.AddCategory)
+		auth.PUT("/category/:id", controller.EditCategoryInfo)
+		auth.DELETE("/category/:id", controller.DeleteCategory)
 	}
 
 	// TODO:需要重构成RESTful API
@@ -70,7 +73,7 @@ func InitRouter() {
 		router.GET("/users", controller.GetUserList)
 
 		// 获取个人信息
-		router.GET("/profile/:id", controller.GetProfile)
+		router.GET("/profile/:id", controller.GetProfileInfo)
 
 		// 文章分类模块
 		router.GET("/categories", controller.GetCategoryList)

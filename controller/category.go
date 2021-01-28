@@ -80,3 +80,48 @@ func GetCategoryList(c *gin.Context) {
 	}
 	successWithData(c, categories)
 }
+
+// JWT:编辑分类
+func EditCategoryInfo(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+	var data model.Category
+	if err := c.ShouldBindJSON(&data); err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+
+	code, ok := model.IsCategoryExist(data.Name)
+	if !ok {
+		fail(c, code)
+	}
+	code = model.EditCategoryInfo(id, &data)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	success(c)
+}
+
+// JWT:删除分类
+func DeleteCategory(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+	//var data model.Category
+	//if err := c.ShouldBindJSON(&data); err != nil {
+	//	utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+	//	fail(c, constant.ParamError)
+	//}
+
+	// TODO:为什么删除接口不需要判断分类是否存在
+	code := model.DeleteCategory(id)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	success(c)
+}
