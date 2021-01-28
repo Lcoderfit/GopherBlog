@@ -23,16 +23,19 @@ const (
 	DatabaseAccessError = 10008
 
 	// 普通级别错误-01用户模块
-	UserAlreadyExistsError = 20101
-	CreateUserError        = 20102
-	GetUserInfoError       = 20103
-	GetUserListError       = 20104
-	UsernameNotExistsError = 20105
-	UserPasswordError      = 20106
-	EncryptPasswordError   = 20107
-	SavePasswordError      = 20108
-	UpdatePasswordError    = 20109
-	UserRoleError          = 20110
+	UserAlreadyExistsError  = 20101
+	CreateUserError         = 20102
+	GetUserInfoError        = 20103
+	GetUserListError        = 20104
+	UsernameNotExistsError  = 20105
+	UserPasswordError       = 20106
+	EncryptPasswordError    = 20107
+	SavePasswordError       = 20108
+	UpdatePasswordError     = 20109
+	UserRoleError           = 20110
+	ChangeUserPasswordError = 20111
+	EditUserInfoError       = 20112
+	DeleteUserError         = 20113
 
 	// 普通级别错误-02中间件模块
 	SetTokenError       = 20201
@@ -81,17 +84,20 @@ var CodeMsg = map[int]string{
 
 	DatabaseAccessError: "数据库访问异常",
 
-	// 模块级别错误
-	UserAlreadyExistsError: "用户已存在",
-	CreateUserError:        "用户创建失败",
-	GetUserInfoError:       "获取用户信息失败",
-	GetUserListError:       "获取用户列表失败",
-	UsernameNotExistsError: "用户名不存在",
-	UserPasswordError:      "密码错误",
-	EncryptPasswordError:   "密码加密错误",
-	SavePasswordError:      "密码保存失败",
-	UpdatePasswordError:    "密码更新失败",
-	UserRoleError:          "用户角色码错误",
+	// 模块级别错误-01用户模块
+	UserAlreadyExistsError:  "用户已存在",
+	CreateUserError:         "用户创建失败",
+	GetUserInfoError:        "获取用户信息失败",
+	GetUserListError:        "获取用户列表失败",
+	UsernameNotExistsError:  "用户名不存在",
+	UserPasswordError:       "密码错误",
+	EncryptPasswordError:    "密码加密错误",
+	SavePasswordError:       "密码保存失败",
+	UpdatePasswordError:     "密码更新失败",
+	UserRoleError:           "用户角色码错误",
+	ChangeUserPasswordError: "密码修改失败",
+	EditUserInfoError:       "用户信息编辑失败",
+	DeleteUserError:         "用户删除失败",
 
 	// 普通级别错误-02中间件模块
 	SetTokenError:       "token设置失败",
@@ -116,12 +122,12 @@ var CodeMsg = map[int]string{
 	CountArticleListError:           "文章列表总数获取失败",
 	GetArticleListByCategoryIdError: "该分类文章列表获取失败",
 
-  // 普通级别错误-06评论模块
-  CreateCommentError:              "评论创建失败",
-	GetCommentInfoError:             "评论获取失败",
-	GetCommentCountError:            "评论数获取失败",
-	GetCommentListError:             "评论列表获取失败",
-	CountCommentError:               "评论数获取失败",
+	// 普通级别错误-06评论模块
+	CreateCommentError:   "评论创建失败",
+	GetCommentInfoError:  "评论获取失败",
+	GetCommentCountError: "评论数获取失败",
+	GetCommentListError:  "评论列表获取失败",
+	CountCommentError:    "评论数获取失败",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息

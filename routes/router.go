@@ -2,6 +2,7 @@ package routes
 
 import (
 	"GopherBlog/controller"
+	"GopherBlog/middleware"
 	"GopherBlog/utils"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
@@ -37,9 +38,24 @@ func InitRouter() {
 		c.HTML(http.StatusOK, "admin", nil)
 	})
 
+	// 需要鉴权的接口
+	auth := r.Group("/api/v1")
+	// 添加JWT中间件
+	auth.Use(middleware.JwtToken())
+	{
+		// 用户模块
+		auth.GET("/admin/users", controller.GetUserList)
+		auth.PUT("/admin/change_password/:id", controller.ChangeUserPassword)
+		auth.PUT("/user/:id", controller.EditUserInfo)
+		auth.DELETE("/user/:id", controller.DeleteUser)
+
+		//
+
+	}
+
 	// TODO:需要重构成RESTful API
 	// 设置路由组，定义无需鉴权的接口
-	router := r.Group("api/v1")
+	router := r.Group("/api/v1")
 	{
 
 		// 验证token

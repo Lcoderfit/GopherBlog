@@ -87,4 +87,59 @@ func GetUserList(c *gin.Context) {
 	successWithData(c, data)
 }
 
-//
+// JWT-修改用户密码
+// TODO:需要鉴权的接口都需要传入data参数？?
+func ChangeUserPassword(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+
+	var data model.User
+	// TODO：为什么这里不需要使用validator进行验证
+	if err := c.ShouldBindJSON(&data); err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+	code := model.ChangeUserPassword(id, &data)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	success(c)
+}
+
+// JWT: 编辑用户信息
+func EditUserInfo(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+	var data model.User
+	if err := c.ShouldBindJSON(&data); err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+
+	code := model.EditUserInfo(id, &data)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	success(c)
+}
+
+// JWT：删除用户
+func DeleteUser(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+
+	code := model.DeleteUser(id)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	success(c)
+}

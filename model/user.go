@@ -133,3 +133,43 @@ func CheckAccount(username, password string) (user User, code int) {
 	}
 	return user, constant.SuccessCode
 }
+
+// 修改用户密码
+// TODO:跟一般的逻辑比是否过于简单
+func ChangeUserPassword(id int, data *User) int {
+	// Select可以选择需要修改的字段， 下面的语句等效于：update user set=xxx where id=yyy
+	// xxx表示Where中的id，yyy表示data中的ID值
+	err := db.Select("password").Where("id = ?", id).Updates(&data).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ChangeUserPasswordError), err)
+		return constant.ChangeUserPasswordError
+	}
+	return constant.SuccessCode
+}
+
+// 编辑用户信息
+func EditUserInfo(id int, data *User) int {
+	// TODO：传入data和传入&data的区别？？
+	var maps = make(map[string]interface{})
+	maps["username"] = data.Username
+	maps["role"] = data.Role
+	// 假设data中的ID为111， 下面语句相当于update user set username=xxx and role=yyy where id='111'
+	err := db.Model(&data).Updates(maps)
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.EditUserInfoError), err)
+		return constant.EditUserInfoError
+	}
+	return constant.SuccessCode
+}
+
+// 删除用户
+func DeleteUser(id int) int {
+	// 如果模型中定义了gorm.DeleteAt字段，则会具有“软删除”功能, 即并不是真正的删除，而是将DeleteAt字段更新为删除语句执行的时间
+	// 可以通过db.UnScoped().Where()查询软删除的数据，要永久删除可以使用db.UnScoped().Delete()
+	err := db.Where("id = ?", id).Delete(&User{}).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.DeleteUserError), err)
+		return constant.DeleteUserError
+	}
+	return constant.SuccessCode
+}
