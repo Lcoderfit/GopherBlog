@@ -103,3 +103,59 @@ func GetArticleListByCategoryId(c *gin.Context) {
 		"total": total,
 	})
 }
+
+// JWT:新增文章
+func AddArticle(c *gin.Context) {
+	var data model.Article
+	if err := c.ShouldBindJSON(&data); err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+
+	// TODO:不用判断文章是否已经存在吗？
+	code := model.CreateArticle(&data)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	successWithData(c, data)
+}
+
+// JWT:编辑文章
+func EditArticleInfo(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+	var data model.Article
+	if err := c.ShouldBindJSON(&data); err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+
+	code := model.EditArticleInfo(id, &data)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	success(c)
+}
+
+// JWT:删除文章
+func DeleteArticle(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+	var data model.Article
+	if err := c.ShouldBindJSON(&data); err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
+
+	code := model.DeleteArticle(id)
+	if code != constant.SuccessCode {
+		fail(c, code)
+	}
+	success(c)
+}
