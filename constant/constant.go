@@ -45,13 +45,15 @@ const (
 	TokenNotExistError  = 20205
 
 	// 普通级别错误-03个人信息模块
-	GetProfileInfoError = 20301
+	GetProfileInfoError    = 20301
+	UpdateProfileInfoError = 20302
 
 	// 普通级别错误-04文章分类模块
-	CategoryExistError   = 20401
-	CreateCategoryError  = 20402
-	GetCategoryInfoError = 20403
-	CategoryNotExist     = 20404
+	CategoryExistError    = 20401
+	CreateCategoryError   = 20402
+	GetCategoryInfoError  = 20403
+	CategoryNotExist      = 20404
+	EditCategoryInfoError = 20405
 
 	// 普通级别错误-05文章模块
 	ArticleNotExistError            = 20501
@@ -107,13 +109,15 @@ var CodeMsg = map[int]string{
 	TokenNotExistError:  "token不存在",
 
 	// 普通级别错误-03个人信息模块
-	GetProfileInfoError: "个人信息获取失败",
+	GetProfileInfoError:    "个人信息获取失败",
+	UpdateProfileInfoError: "个人信息更新错误",
 
 	// 普通级别错误-04文章分类模块
-	CategoryExistError:   "分类已存在",
-	CreateCategoryError:  "新增分类失败",
-	GetCategoryInfoError: "分类获取失败",
-	CategoryNotExist:     "分类不存在",
+	CategoryExistError:    "分类已存在",
+	CreateCategoryError:   "新增分类失败",
+	GetCategoryInfoError:  "分类获取失败",
+	CategoryNotExist:      "分类不存在",
+	EditCategoryInfoError: "文章分类编辑错误",
 
 	// 普通级别错误-05文章模块
 	ArticleNotExistError:            "文章信息获取失败",

@@ -136,7 +136,16 @@ func DeleteUser(c *gin.Context) {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
 	}
+	var data model.User
+	if err := c.ShouldBindJSON(&data); err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+	}
 
+	if ok := model.IsUserExist(data.Username); !ok {
+		utils.Logger.Info(constant.ConvertForLog(constant.UserAlreadyExistsError))
+		fail(c, constant.UserAlreadyExistsError)
+	}
 	code := model.DeleteUser(id)
 	if code != constant.SuccessCode {
 		fail(c, code)

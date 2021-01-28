@@ -59,3 +59,27 @@ func GetCategoryList(pageSize, pageNum int) (data []Category, code int) {
 	}
 	return data, constant.SuccessCode
 }
+
+// 编辑分类信息
+func EditCategoryInfo(id int, data *Category) int {
+	maps := make(map[string]interface{})
+	maps["name"] = data.Name
+	// update category set name=xxx where id=yyy
+	err := db.Model(&Category{}).Select("id = ?", id).Updates(maps).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.EditCategoryInfoError), err)
+		return constant.EditCategoryInfoError
+	}
+	return constant.SuccessCode
+}
+
+// 删除分类信息
+func DeleteCategory(id int) int {
+	// TODO:Update用Model，Delete一般用Where？？
+	err := db.Where("id = ?", id).Delete(&Category{}).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.DeleteCategoryError), err)
+		return constant.DeleteUserError
+	}
+	return constant.SuccessCode
+}
