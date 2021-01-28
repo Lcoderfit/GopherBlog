@@ -100,7 +100,7 @@ func GetArticleListByCategoryId(id, pageSize, pageNum int) (articles []Article, 
 func CreateArticle(data *Article) int {
 	err := db.Create(&data).Error
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.CreateAriticleError), err)
+		utils.Logger.Error(constant.ConvertForLog(constant.CreateArticleError), err)
 		return constant.CreateArticleError
 	}
 	return constant.SuccessCode
