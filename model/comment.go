@@ -72,3 +72,11 @@ func GetCommentList(articleId, pageSize, pageNum int) (comments []Comment, total
 	}
 	return comments, total, constant.SuccessCode
 }
+
+// 通过评论
+func ApproveComment(id int, data *Comment) int {
+	maps := map[string]interface{}{
+		"status": data.Status,
+	}
+	err := db.
+}

@@ -68,7 +68,10 @@ func InitRouter() {
 		auth.DELETE("/article/:id", controller.DeleteArticle)
 
 		// 评论模块
-
+		auth.GET("/admin/comment/list/:id", controller.GetCommentList)
+		auth.PUT("/check_comment/:id", controller.ApproveComment)
+		auth.PUT("/uncheck_comment/:id", controller.TakeDownComment)
+		auth.DELETE("/comment/:id", controller.DeleteComment)
 	}
 
 	// TODO:需要重构成RESTful API
