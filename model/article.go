@@ -95,3 +95,41 @@ func GetArticleListByCategoryId(id, pageSize, pageNum int) (articles []Article, 
 	}
 	return articles, total, constant.SuccessCode
 }
+
+// 创建文章
+func CreateArticle(data *Article) int {
+	err := db.Create(&data).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.CreateAriticleError), err)
+		return constant.CreateArticleError
+	}
+	return constant.SuccessCode
+}
+
+// 编辑文章
+func EditArticleInfo(id int, data *Article) int {
+	// updates操作最好还是使用map作为参数传入
+	maps := map[string]interface{}{
+		"Title":   data.Title,
+		"desc":    data.Desc,
+		"cid":     data.Cid,
+		"content": data.Content,
+		"img":     data.Img,
+	}
+	err := db.Model(&Article{}).Where("id = ?", id).Updates(maps).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.EditArticleInfoError), err)
+		return constant.EditArticleInfoError
+	}
+	return constant.SuccessCode
+}
+
+// 删除文章
+func DeleteArticle(id int) int {
+	err := db.Where("id = ?", id).Delete(&Article{}).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.DeleteArticleError), err)
+		return constant.DeleteArticleError
+	}
+	return constant.SuccessCode
+}

@@ -61,6 +61,13 @@ func InitRouter() {
 		auth.DELETE("/category/:id", controller.DeleteCategory)
 
 		// 文章模块
+		auth.GET("/admin/article/info/:id", controller.GetArticleInfo)
+		auth.GET("/admin/articles", controller.GetArticleList)
+		auth.POST("/article/add", controller.AddArticle)
+		auth.PUT("/article/:id", controller.EditArticleInfo)
+		auth.DELETE("/article/:id", controller.DeleteArticle)
+
+		// 评论模块
 
 	}
 
@@ -88,7 +95,6 @@ func InitRouter() {
 		router.GET("/category/:id", controller.GetCategoryInfo)
 
 		// 文章模块
-		//router.POST("/article/add", controller.CreateArticle)
 		router.GET("/article/info/:id", controller.GetArticleInfo)
 		router.GET("/articles", controller.GetArticleList)
 		router.GET("/article/list/:id", controller.GetArticleListByCategoryId) // 获取同一分类的所有文章

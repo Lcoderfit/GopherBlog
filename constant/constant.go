@@ -61,6 +61,9 @@ const (
 	GetArticleListInfoError         = 20503
 	CountArticleListError           = 20504
 	GetArticleListByCategoryIdError = 20505
+	CreateArticleError              = 20506
+	EditArticleInfoError            = 20507
+	DeleteArticleError              = 20508
 
 	// 普通级别错误-06评论模块
 	CreateCommentError   = 20601
@@ -118,6 +121,7 @@ var CodeMsg = map[int]string{
 	GetCategoryInfoError:  "分类获取失败",
 	CategoryNotExist:      "分类不存在",
 	EditCategoryInfoError: "文章分类编辑错误",
+	CreateArticleError:    "文章创建失败",
 
 	// 普通级别错误-05文章模块
 	ArticleNotExistError:            "文章信息获取失败",
@@ -125,6 +129,8 @@ var CodeMsg = map[int]string{
 	GetArticleListInfoError:         "文章列表获取失败",
 	CountArticleListError:           "文章列表总数获取失败",
 	GetArticleListByCategoryIdError: "该分类文章列表获取失败",
+	EditArticleInfoError:            "文章编辑失败",
+	DeleteArticleError:              "文章删除失败",
 
 	// 普通级别错误-06评论模块
 	CreateCommentError:   "评论创建失败",
