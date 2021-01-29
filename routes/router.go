@@ -22,9 +22,12 @@ func InitRouter() {
 	gin.SetMode(utils.ServerCfg.AppMode)
 	r := gin.New()
 	r.HTMLRender = createMyRender()
-	// 支持跨站资源共享，解决不同源问题
-	//r.Use(middleware.Cors())
-	//r.Use(middleware.Log())
+	//
+	r.Use(middleware.Log())
+	// 当出现panic时会导致程序崩溃退出，该中间件会恢复panic导致的崩溃并返回http code 500
+	r.Use(gin.Recovery())
+	// 支持跨域资源共享
+	r.Use(middleware.Cors())
 	// TODO: 第一个参数是URL路径，第二个参数是项目路径, 几个函数的区别是什么？？
 	r.Static("/static", "/static/front/static")
 	r.Static("/admin", "/static/admin")

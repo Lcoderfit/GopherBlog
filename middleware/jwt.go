@@ -115,7 +115,7 @@ func JwtToken() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		// 设置会话变量
+		// 设置上下文变量
 		c.Set("username", myClaim)
 		return
 	}

@@ -38,11 +38,14 @@ const (
 	DeleteUserError         = 20113
 
 	// 普通级别错误-02中间件模块
-	SetTokenError       = 20201
-	TokenMalformedError = 20202
-	TokenInvalidError   = 20203
-	CheckTokenError     = 20204
-	TokenNotExistError  = 20205
+	SetTokenError         = 20201
+	TokenMalformedError   = 20202
+	TokenInvalidError     = 20203
+	CheckTokenError       = 20204
+	TokenNotExistError    = 20205
+	CreateLogFileError    = 20206
+	CreateRotateLogsError = 20207
+	GetLocalHostnameError = 20208
 
 	// 普通级别错误-03个人信息模块
 	GetProfileInfoError    = 20301
@@ -110,11 +113,14 @@ var CodeMsg = map[int]string{
 	DeleteUserError:         "用户删除失败",
 
 	// 普通级别错误-02中间件模块
-	SetTokenError:       "token设置失败",
-	TokenMalformedError: "token格式错误",
-	TokenInvalidError:   "token已失效",
-	CheckTokenError:     "token不正确",
-	TokenNotExistError:  "token不存在",
+	SetTokenError:         "token设置失败",
+	TokenMalformedError:   "token格式错误",
+	TokenInvalidError:     "token已失效",
+	CheckTokenError:       "token不正确",
+	TokenNotExistError:    "token不存在",
+	CreateLogFileError:    "日志文件创建失败",
+	CreateRotateLogsError: "轮询日志创建失败",
+	GetLocalHostnameError: "本地系统主IP获取失败",
 
 	// 普通级别错误-03个人信息模块
 	GetProfileInfoError:    "个人信息获取失败",
