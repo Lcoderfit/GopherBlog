@@ -38,11 +38,14 @@ const (
 	DeleteUserError         = 20113
 
 	// 普通级别错误-02中间件模块
-	SetTokenError       = 20201
-	TokenMalformedError = 20202
-	TokenInvalidError   = 20203
-	CheckTokenError     = 20204
-	TokenNotExistError  = 20205
+	SetTokenError         = 20201
+	TokenMalformedError   = 20202
+	TokenInvalidError     = 20203
+	CheckTokenError       = 20204
+	TokenNotExistError    = 20205
+	CreateLogFileError    = 20206
+	CreateRotateLogsError = 20207
+	GetLocalHostnameError = 20208
 
 	// 普通级别错误-03个人信息模块
 	GetProfileInfoError    = 20301
@@ -66,11 +69,16 @@ const (
 	DeleteArticleError              = 20508
 
 	// 普通级别错误-06评论模块
-	CreateCommentError   = 20601
-	GetCommentInfoError  = 20602
-	GetCommentCountError = 20603
-	GetCommentListError  = 20604
-	CountCommentError    = 20605
+	CreateCommentError      = 20601
+	GetCommentInfoError     = 20602
+	GetCommentCountError    = 20603
+	GetCommentListError     = 20604
+	CountCommentError       = 20605
+	ApproveCommentError     = 20606
+	AddCommentCountError    = 20607
+	TakeDownCommentError    = 20608
+	ReduceCommentCountError = 20609
+	DeleteCommentError      = 20610
 )
 
 // 状态码信息
@@ -105,11 +113,14 @@ var CodeMsg = map[int]string{
 	DeleteUserError:         "用户删除失败",
 
 	// 普通级别错误-02中间件模块
-	SetTokenError:       "token设置失败",
-	TokenMalformedError: "token格式错误",
-	TokenInvalidError:   "token已失效",
-	CheckTokenError:     "token不正确",
-	TokenNotExistError:  "token不存在",
+	SetTokenError:         "token设置失败",
+	TokenMalformedError:   "token格式错误",
+	TokenInvalidError:     "token已失效",
+	CheckTokenError:       "token不正确",
+	TokenNotExistError:    "token不存在",
+	CreateLogFileError:    "日志文件创建失败",
+	CreateRotateLogsError: "轮询日志创建失败",
+	GetLocalHostnameError: "本地系统主IP获取失败",
 
 	// 普通级别错误-03个人信息模块
 	GetProfileInfoError:    "个人信息获取失败",
@@ -133,11 +144,16 @@ var CodeMsg = map[int]string{
 	DeleteArticleError:              "文章删除失败",
 
 	// 普通级别错误-06评论模块
-	CreateCommentError:   "评论创建失败",
-	GetCommentInfoError:  "评论获取失败",
-	GetCommentCountError: "评论数获取失败",
-	GetCommentListError:  "评论列表获取失败",
-	CountCommentError:    "评论数获取失败",
+	CreateCommentError:      "评论创建失败",
+	GetCommentInfoError:     "评论获取失败",
+	GetCommentCountError:    "评论数获取失败",
+	GetCommentListError:     "评论列表获取失败",
+	CountCommentError:       "评论数获取失败",
+	ApproveCommentError:     "评论通过失败",
+	AddCommentCountError:    "评论数增加失败",
+	TakeDownCommentError:    "评论撤销失败",
+	ReduceCommentCountError: "评论数减少失败",
+	DeleteCommentError:      "评论删除错误",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息
