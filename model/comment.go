@@ -78,5 +78,53 @@ func ApproveComment(id int, data *Comment) int {
 	maps := map[string]interface{}{
 		"status": data.Status,
 	}
-	err := db.
+	var comment Comment
+	// 更新评论状态
+	err := db.Model(&Comment{}).Where("id = ?", id).Updates(maps).Take(&comment).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ApproveCommentError), err)
+		return constant.ApproveCommentError
+	}
+	// 将文章的评论数增加1
+	err = db.Model(&Article{}).Where("id = ?", comment.ArticleId).UpdateColumn(
+		"comment_count", gorm.Expr("comment_count + ?", 1),
+	).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.AddCommentCountError), err)
+		return constant.AddCommentCountError
+	}
+	return constant.SuccessCode
+}
+
+// 撤销审核
+func TakeDownComment(id int, data *Comment) int {
+	maps := map[string]interface{}{
+		"status": data.Status,
+	}
+	var comment Comment
+	// 更新status
+	err := db.Model(&Comment{}).Where("id = ?", id).Updates(maps).Take(&comment).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.TakeDownCommentError), err)
+		return constant.TakeDownCommentError
+	}
+	// 评论数-1
+	err = db.Model(&Article{}).Where("id = ?", comment.ArticleId).UpdateColumn(
+		"comment_count", gorm.Expr("comment_count + ?", 1),
+	).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ReduceCommentCountError), err)
+		return constant.ReduceCommentCountError
+	}
+	return constant.SuccessCode
+}
+
+// 删除评论
+func DeleteComment(id int) int {
+	err := db.Where("id = ?", id).Delete(&Comment{}).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.DeleteCommentError), err)
+		return constant.DeleteCommentError
+	}
+	return constant.SuccessCode
 }

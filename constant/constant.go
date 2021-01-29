@@ -66,11 +66,16 @@ const (
 	DeleteArticleError              = 20508
 
 	// 普通级别错误-06评论模块
-	CreateCommentError   = 20601
-	GetCommentInfoError  = 20602
-	GetCommentCountError = 20603
-	GetCommentListError  = 20604
-	CountCommentError    = 20605
+	CreateCommentError      = 20601
+	GetCommentInfoError     = 20602
+	GetCommentCountError    = 20603
+	GetCommentListError     = 20604
+	CountCommentError       = 20605
+	ApproveCommentError     = 20606
+	AddCommentCountError    = 20607
+	TakeDownCommentError    = 20608
+	ReduceCommentCountError = 20609
+	DeleteCommentError      = 20610
 )
 
 // 状态码信息
@@ -133,11 +138,16 @@ var CodeMsg = map[int]string{
 	DeleteArticleError:              "文章删除失败",
 
 	// 普通级别错误-06评论模块
-	CreateCommentError:   "评论创建失败",
-	GetCommentInfoError:  "评论获取失败",
-	GetCommentCountError: "评论数获取失败",
-	GetCommentListError:  "评论列表获取失败",
-	CountCommentError:    "评论数获取失败",
+	CreateCommentError:      "评论创建失败",
+	GetCommentInfoError:     "评论获取失败",
+	GetCommentCountError:    "评论数获取失败",
+	GetCommentListError:     "评论列表获取失败",
+	CountCommentError:       "评论数获取失败",
+	ApproveCommentError:     "评论通过失败",
+	AddCommentCountError:    "评论数增加失败",
+	TakeDownCommentError:    "评论撤销失败",
+	ReduceCommentCountError: "评论数减少失败",
+	DeleteCommentError:      "评论删除错误",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息
