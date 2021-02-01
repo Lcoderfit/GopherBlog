@@ -1,3 +1,6 @@
+/*
+controller 定义控制器层逻辑
+*/
 package controller
 
 import (
@@ -6,7 +9,7 @@ import (
 	"net/http"
 )
 
-// 请求成功
+// success 请求成功
 func success(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":    constant.SuccessCode,
@@ -31,7 +34,7 @@ func successWithStatusCode(c *gin.Context, statusCode int, data interface{}) {
 	})
 }
 
-// 请求失败, 如果请求失败了，则没有必要返回data
+// fail 请求失败, 如果请求失败了，则没有必要返回data
 func fail(c *gin.Context, code int) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":  code,
@@ -39,6 +42,7 @@ func fail(c *gin.Context, code int) {
 	})
 }
 
+// failWithData 请求失败，并返回data
 func failWithData(c *gin.Context, code int, data interface{}) {
 	c.JSON(http.StatusOK, gin.H{
 		"code":  code,

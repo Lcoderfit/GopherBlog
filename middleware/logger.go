@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-// 日志中间件
+// Log 日志中间件
 func Log() gin.HandlerFunc {
 	// 创建日志文件
 	filePath := "log/log"

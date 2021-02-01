@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// gorm.Model中设置了ID为主键， 如果没有使用这个，需要显示设置一个字段为"primaryKey"
+// Comment gorm.Model中设置了ID为主键， 如果没有使用这个，需要显示设置一个字段为"primaryKey"
 // TODO:需要设置成belongs to或者has many关系
 type Comment struct {
 	gorm.Model
@@ -18,7 +18,7 @@ type Comment struct {
 	Status    int8   `gorm:"tinyint;not null;default:2" json:"status"`  // 状态默认为2
 }
 
-// 新增评论, 评论内容可以重复，需要不需要像User的model一样判断是否存在
+// CreateComment 新增评论, 评论内容可以重复，需要不需要像User的model一样判断是否存在
 func CreateComment(data *Comment) int {
 	err := db.Create(data).Error
 	if err != nil {
@@ -28,7 +28,7 @@ func CreateComment(data *Comment) int {
 	return constant.SuccessCode
 }
 
-// 获取评论
+// GetCommentInfo 获取评论
 func GetCommentInfo(id int) (comment Comment, code int) {
 	err := db.Where("id = ?", id).Take(&comment).Error
 	if err != nil {
@@ -38,7 +38,7 @@ func GetCommentInfo(id int) (comment Comment, code int) {
 	return comment, constant.SuccessCode
 }
 
-// 获取评论列表
+// GetCommentCount 获取评论列表
 func GetCommentCount(articleId int) (count, code int) {
 	// TODO:status为1表示是正常用户，为2表示什么呢？
 	err := db.Where("article_id = ? and status = ?", articleId, 1).Take(&count).Error
@@ -49,7 +49,7 @@ func GetCommentCount(articleId int) (count, code int) {
 	return count, constant.SuccessCode
 }
 
-// 前端获取评论列表
+// GetCommentList 前端获取评论列表
 func GetCommentList(articleId, pageSize, pageNum int) (comments []Comment, total int64, code int) {
 	err := db.Where("article_id = ?", articleId).Count(&total).Error
 	if err != nil {
@@ -73,7 +73,7 @@ func GetCommentList(articleId, pageSize, pageNum int) (comments []Comment, total
 	return comments, total, constant.SuccessCode
 }
 
-// 通过评论
+// ApproveComment 通过评论
 func ApproveComment(id int, data *Comment) int {
 	maps := map[string]interface{}{
 		"status": data.Status,
@@ -96,7 +96,7 @@ func ApproveComment(id int, data *Comment) int {
 	return constant.SuccessCode
 }
 
-// 撤销审核
+// TakeDownComment 撤销审核
 func TakeDownComment(id int, data *Comment) int {
 	maps := map[string]interface{}{
 		"status": data.Status,
@@ -119,7 +119,7 @@ func TakeDownComment(id int, data *Comment) int {
 	return constant.SuccessCode
 }
 
-// 删除评论
+// DeleteComment 删除评论
 func DeleteComment(id int) int {
 	err := db.Where("id = ?", id).Delete(&Comment{}).Error
 	if err != nil {

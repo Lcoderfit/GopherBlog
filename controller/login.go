@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 登录接口
+// Login 登录接口
 func Login(c *gin.Context) {
 	var data model.User
 	if err := c.ShouldBindJSON(&data); err != nil {
@@ -45,11 +45,12 @@ func Login(c *gin.Context) {
 	})
 }
 
+// UpToken 用于存储更新后的token
 type UpToken struct {
 	Token string `json:"token"`
 }
 
-// 验证token
+// CheckToken 验证token
 func CheckToken(c *gin.Context) {
 	var data UpToken
 	if err := c.ShouldBindJSON(&data); err != nil {

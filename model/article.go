@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 文章结构体
+// Article 文章结构体
 // TODO：foreignKey标签后面的字段名是否大小写敏感？？
 type Article struct {
 	gorm.Model
@@ -20,7 +20,7 @@ type Article struct {
 	ReadCount    int      `gorm:"type:int;not null;default:0" json:"read_count"`
 }
 
-// 获取单个文章信息
+// GetArticleInfo 获取单个文章信息
 func GetArticleInfo(id int) (article Article, code int) {
 	// TODO:Preload中的字段名是否大小写敏感
 	// Find不会返回ErrRecordNotFound， 但是First和Take会
@@ -41,7 +41,7 @@ func GetArticleInfo(id int) (article Article, code int) {
 	return article, constant.SuccessCode
 }
 
-// 获取文章列表
+// GetArticleList 获取文章列表
 func GetArticleList(title string, pageSize, pageNum int) (articles []Article, total int64, code int) {
 	// TODO:1.需要增加文章按时间排序、按阅读量排序的功能(或集成redis)
 	// TODO:2.需要集成专门的搜索引擎用于搜索，而不是使用MySQL的模糊搜索
@@ -78,7 +78,7 @@ func GetArticleList(title string, pageSize, pageNum int) (articles []Article, to
 	return articles, total, constant.SuccessCode
 }
 
-// 通过分类Id获取文章列表
+// GetArticleListByCategoryId 通过分类Id获取文章列表
 func GetArticleListByCategoryId(id, pageSize, pageNum int) (articles []Article, total int64, code int) {
 	// TODO:Preload先后顺序是否对结果有影响
 	err := db.Preload("Category").Where("cid = ?", id).Limit(pageSize).Offset(
@@ -96,7 +96,7 @@ func GetArticleListByCategoryId(id, pageSize, pageNum int) (articles []Article, 
 	return articles, total, constant.SuccessCode
 }
 
-// 创建文章
+// CreateArticle 创建文章
 func CreateArticle(data *Article) int {
 	err := db.Create(&data).Error
 	if err != nil {
@@ -106,7 +106,7 @@ func CreateArticle(data *Article) int {
 	return constant.SuccessCode
 }
 
-// 编辑文章
+// EditArticleInfo 编辑文章
 func EditArticleInfo(id int, data *Article) int {
 	// updates操作最好还是使用map作为参数传入
 	maps := map[string]interface{}{
@@ -124,7 +124,7 @@ func EditArticleInfo(id int, data *Article) int {
 	return constant.SuccessCode
 }
 
-// 删除文章
+// DeleteArticle 删除文章
 func DeleteArticle(id int) int {
 	err := db.Where("id = ?", id).Delete(&Article{}).Error
 	if err != nil {

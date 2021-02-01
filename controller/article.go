@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-// 获取单个文章信息
+// GetArticleInfo 获取单个文章信息
 func GetArticleInfo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -24,7 +24,7 @@ func GetArticleInfo(c *gin.Context) {
 	successWithData(c, data)
 }
 
-// 获取文章列表
+// GetArticleList 获取文章列表
 func GetArticleList(c *gin.Context) {
 	pageSize, err := strconv.Atoi(c.Param("pageSize"))
 	if err != nil {
@@ -63,7 +63,7 @@ func GetArticleList(c *gin.Context) {
 	})
 }
 
-// 获取同一分类下的文章
+// GetArticleListByCategoryId 获取同一分类下的文章
 func GetArticleListByCategoryId(c *gin.Context) {
 	pageSize, err := strconv.Atoi(c.Param("page_size"))
 	if err != nil {
@@ -104,7 +104,7 @@ func GetArticleListByCategoryId(c *gin.Context) {
 	})
 }
 
-// JWT:新增文章
+// AddArticle JWT鉴权接口：新增文章
 func AddArticle(c *gin.Context) {
 	var data model.Article
 	if err := c.ShouldBindJSON(&data); err != nil {
@@ -120,7 +120,7 @@ func AddArticle(c *gin.Context) {
 	successWithData(c, data)
 }
 
-// JWT:编辑文章
+// EditArticleInfo JWT鉴权接口:编辑文章
 func EditArticleInfo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -140,7 +140,7 @@ func EditArticleInfo(c *gin.Context) {
 	success(c)
 }
 
-// JWT:删除文章
+// DeleteArticle JWT鉴权接口:删除文章
 func DeleteArticle(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

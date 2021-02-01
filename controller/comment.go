@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-// 新增评论
+// AddComment 新增评论
 func AddComment(c *gin.Context) {
 	var data model.Comment
 	err := c.ShouldBindJSON(&data)
@@ -30,7 +30,7 @@ func AddComment(c *gin.Context) {
 	successWithData(c, data)
 }
 
-// 获取评论
+// GetCommentInfo 获取评论
 func GetCommentInfo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -44,7 +44,7 @@ func GetCommentInfo(c *gin.Context) {
 	successWithData(c, comments)
 }
 
-// 获取文章评论数量
+// GetCommentCount 获取文章评论数量
 func GetCommentCount(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -58,7 +58,7 @@ func GetCommentCount(c *gin.Context) {
 	successWithData(c, count)
 }
 
-// 前端获取评论列表
+// GetCommentList 前端获取评论列表
 func GetCommentList(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -95,7 +95,7 @@ func GetCommentList(c *gin.Context) {
 	})
 }
 
-// JWT: 审核评论
+// ApproveComment JWT鉴权接口:审核评论
 func ApproveComment(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -114,7 +114,7 @@ func ApproveComment(c *gin.Context) {
 	success(c)
 }
 
-// JWT:撤销评论
+// TakeDownComment JWT鉴权接口:撤销评论
 func TakeDownComment(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -134,7 +134,7 @@ func TakeDownComment(c *gin.Context) {
 	success(c)
 }
 
-// JWT:删除评论
+// DeleteComment JWT鉴权接口:删除评论
 func DeleteComment(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

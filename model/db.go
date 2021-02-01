@@ -13,6 +13,7 @@ import (
 var db *gorm.DB
 var err error
 
+// InitDB 初始化数据库设置
 func InitDB() {
 	// data source name
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true&loc=Local",

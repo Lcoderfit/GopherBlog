@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-// 添加用户
+// AddUser 添加用户
 func AddUser(c *gin.Context) {
 	// 1.声明一个模型
 	// 2.参数校验
@@ -43,7 +43,7 @@ func AddUser(c *gin.Context) {
 	success(c)
 }
 
-// 获取用户信息
+// GetUserInfo 获取用户信息
 func GetUserInfo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -57,7 +57,7 @@ func GetUserInfo(c *gin.Context) {
 	successWithData(c, user)
 }
 
-// 获取用户列表
+// GetUserList 获取用户列表
 func GetUserList(c *gin.Context) {
 	pageSize, err := strconv.Atoi(c.Query("page_size"))
 	pageNum, err := strconv.Atoi(c.Query("page_num"))
@@ -87,7 +87,7 @@ func GetUserList(c *gin.Context) {
 	successWithData(c, data)
 }
 
-// JWT-修改用户密码
+// ChangeUserPassword JWT鉴权接口:修改用户密码
 // TODO:需要鉴权的接口都需要传入data参数？?
 func ChangeUserPassword(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
@@ -109,7 +109,7 @@ func ChangeUserPassword(c *gin.Context) {
 	success(c)
 }
 
-// JWT: 编辑用户信息
+// EditUserInfo JWT鉴权接口:编辑用户信息
 func EditUserInfo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -129,7 +129,7 @@ func EditUserInfo(c *gin.Context) {
 	success(c)
 }
 
-// JWT：删除用户
+// DeleteUser JWT鉴权接口:删除用户
 func DeleteUser(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

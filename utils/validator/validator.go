@@ -10,7 +10,7 @@ import (
 	"reflect"
 )
 
-// 自定义验证器
+// Validate 自定义验证器
 func Validate(data interface{}) (string, error) {
 	// 1.声明一个通用的翻译器（针对各国语言都可以，所以是通用的）
 	// 2.unTrans.New()第一个参数是一个备用的翻译器，第二个参数是一个不定参数，表示设置该通用翻译器所支持的语言翻译器

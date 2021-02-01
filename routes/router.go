@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-// 自定义渲染器
+// createMyRender 自定义渲染器
 func createMyRender() multitemplate.Renderer {
 	p := multitemplate.NewRenderer()
 	p.AddFromFiles("admin", "static/admin/index.html")
@@ -17,6 +17,7 @@ func createMyRender() multitemplate.Renderer {
 	return p
 }
 
+// InitRouter 初始化路由
 func InitRouter() {
 	// 设置项目启动模式, debug表示调试模式，test表示测试模式，release表示发布模式（用于生产环境）
 	gin.SetMode(utils.ServerCfg.AppMode)

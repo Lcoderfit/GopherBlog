@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-// 添加文章分类
+// AddCategory 添加文章分类
 func AddCategory(c *gin.Context) {
 	var data model.Category
 	if err := c.ShouldBindJSON(&data); err != nil {
@@ -36,7 +36,7 @@ func AddCategory(c *gin.Context) {
 	successWithData(c, data)
 }
 
-// 获取分类信息
+// GetCategoryInfo 获取分类信息
 func GetCategoryInfo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -50,7 +50,7 @@ func GetCategoryInfo(c *gin.Context) {
 	successWithData(c, data)
 }
 
-// 获取分类列表
+// GetCategoryList 获取分类列表
 func GetCategoryList(c *gin.Context) {
 	pageNum, err := strconv.Atoi(c.Param("pageNum"))
 	if err != nil {
@@ -81,7 +81,7 @@ func GetCategoryList(c *gin.Context) {
 	successWithData(c, categories)
 }
 
-// JWT:编辑分类
+// EditCategoryInfo JWT鉴权接口:编辑分类
 func EditCategoryInfo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -105,7 +105,7 @@ func EditCategoryInfo(c *gin.Context) {
 	success(c)
 }
 
-// JWT:删除分类
+// DeleteCategory JWT鉴权接口:删除分类
 func DeleteCategory(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

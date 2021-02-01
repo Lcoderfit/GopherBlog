@@ -1,3 +1,6 @@
+/*
+middleware 定义中间件，例如鉴权、日志、数据验证、跨域资源共享
+*/
 package middleware
 
 import (
@@ -11,16 +14,16 @@ import (
 	"time"
 )
 
-// 自定义jwt的payload部分（所携带的信息）
+// MyClaim 自定义jwt的payload部分（所携带的信息）
 type MyClaim struct {
 	username string
 	jwt.StandardClaims
 }
 
-// SignedString函数需要传入字节切片
+// JwtKey SignedString函数需要传入字节切片
 var JwtKey = []byte(utils.JwtKey)
 
-// 设置token
+// SetToken 设置token
 func SetToken(username string) (string, int) {
 	// 设置token的过期时间，超出该时间token失效，需要重新登录
 	expiredTime := time.Now().Add(7 * 24 * time.Hour)
@@ -46,7 +49,7 @@ func SetToken(username string) (string, int) {
 	return token, constant.SuccessCode
 }
 
-// 校验token
+// CheckToken 校验token
 func CheckToken(token string) (*MyClaim, int, error) {
 	var myClaim MyClaim
 	// 解析出jwt
@@ -76,7 +79,7 @@ func CheckToken(token string) (*MyClaim, int, error) {
 	return nil, constant.CheckTokenError, errors.New("")
 }
 
-// jwt中间件
+// JwtToken jwt中间件
 // TODO：将c.JSON替换为响应函数
 func JwtToken() gin.HandlerFunc {
 	return func(c *gin.Context) {

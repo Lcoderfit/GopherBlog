@@ -10,7 +10,7 @@ type Category struct {
 	Name string `gorm:"type:varchar(20);not null" json:"name"`
 }
 
-// 判断文章分类是否存在
+// IsCategoryExist 判断文章分类是否存在
 func IsCategoryExist(name string) (int, bool) {
 	var data Category
 	err := db.Where("name = ?", name).Take(&data).Error
@@ -25,7 +25,7 @@ func IsCategoryExist(name string) (int, bool) {
 	return constant.SuccessCode, false
 }
 
-// 创建新分类
+// CreateCategory 创建新分类
 func CreateCategory(data *Category) int {
 	err := db.Create(data).Error
 	if err != nil {
@@ -35,7 +35,7 @@ func CreateCategory(data *Category) int {
 	return constant.SuccessCode
 }
 
-// 获取文章分类信息
+// GetCategoryInfo 获取文章分类信息
 func GetCategoryInfo(id int) (Category, int) {
 	var data Category
 	err := db.Where("id = ?", id).Take(&data).Error
@@ -46,7 +46,7 @@ func GetCategoryInfo(id int) (Category, int) {
 	return data, constant.SuccessCode
 }
 
-// 获取文章分类列表
+// GetCategoryList 获取文章分类列表
 func GetCategoryList(pageSize, pageNum int) (data []Category, code int) {
 	err := db.Find(&data).Limit(pageSize).Offset(pageSize * (pageNum - 1)).Error
 	if err != nil {
@@ -60,7 +60,7 @@ func GetCategoryList(pageSize, pageNum int) (data []Category, code int) {
 	return data, constant.SuccessCode
 }
 
-// 编辑分类信息
+// EditCategoryInfo 编辑分类信息
 func EditCategoryInfo(id int, data *Category) int {
 	maps := make(map[string]interface{})
 	maps["name"] = data.Name
@@ -73,13 +73,13 @@ func EditCategoryInfo(id int, data *Category) int {
 	return constant.SuccessCode
 }
 
-// 删除分类信息
+// DeleteCategory 删除分类信息
 func DeleteCategory(id int) int {
 	// TODO:Update用Model，Delete一般用Where？？
 	err := db.Where("id = ?", id).Delete(&Category{}).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.DeleteCategoryError), err)
-		return constant.DeleteUserError
+		return constant.DeleteCategoryError
 	}
 	return constant.SuccessCode
 }

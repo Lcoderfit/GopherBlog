@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 用户模型
+// User 用户模型
 type User struct {
 	// gorm.Model是一个包含ID、CreateAt、UpdateAt、DeleteAt字段的结构体，可以内嵌到自定义模型中
 	// 这样自己的模型就带有ID（主键）、CreateAt、UpdateAt、DeleteAt等的字段
@@ -22,7 +22,7 @@ type User struct {
 	Role     int    `gorm:"type:int;default:2" json:"role" validate:"required,gte=2" label:"角色码"`
 }
 
-// 检查用户是否存在
+// IsUserExist 检查用户是否存在
 func IsUserExist(name string) bool {
 	var user User
 	// 1.字段名用数据库字段名称或者模型中的字段名都可以
@@ -39,7 +39,7 @@ func IsUserExist(name string) bool {
 	return false
 }
 
-// 创建新用户, 实现BeforeSave和BeforeUpdate接口，对密码进行创建和更新时都会自动进行加密
+// CreateUser 创建新用户, 实现BeforeSave和BeforeUpdate接口，对密码进行创建和更新时都会自动进行加密
 func CreateUser(data *User) error {
 	err := db.Create(data).Error
 	if err != nil {
@@ -49,7 +49,7 @@ func CreateUser(data *User) error {
 	return nil
 }
 
-// 保存密码到数据库中时，自动对密码进行加密
+// BeforeSave 保存密码到数据库中时，自动对密码进行加密
 func (u *User) BeforeSave(_ *gorm.DB) (err error) {
 	u.Password, err = EncryptPassword(u.Password)
 	if err != nil {
@@ -59,7 +59,7 @@ func (u *User) BeforeSave(_ *gorm.DB) (err error) {
 	return
 }
 
-// 更新密码在保存到数据库之前自动对密码进行加密
+// BeforeUpdate 更新密码在保存到数据库之前自动对密码进行加密
 func (u *User) BeforeUpdate(_ *gorm.DB) (err error) {
 	u.Password, err = EncryptPassword(u.Password)
 	if err != nil {
@@ -69,7 +69,7 @@ func (u *User) BeforeUpdate(_ *gorm.DB) (err error) {
 	return
 }
 
-// 对密码进行bcrypt加密
+// EncryptPassword 对密码进行bcrypt加密
 func EncryptPassword(password string) (string, error) {
 	const cost = 10
 	hashPwd, err := bcrypt.GenerateFromPassword([]byte(password), cost)
@@ -80,7 +80,7 @@ func EncryptPassword(password string) (string, error) {
 	return string(hashPwd), nil
 }
 
-// 通过用户ID获取用户数据
+// GetUserInfoById 通过用户ID获取用户数据
 func GetUserInfoById(id int) (User, error) {
 	var user User
 	err := db.Where("id = ?", id).Take(&user).Error
@@ -91,7 +91,7 @@ func GetUserInfoById(id int) (User, error) {
 	return user, nil
 }
 
-// 获取用户列表
+// GetUserList 获取用户列表
 // 可能存储非常多的数据，total需要用长整型
 func GetUserList(pageSize, pageNum int, username string) (users []User, total int64, err error) {
 	if username != "" {
@@ -109,7 +109,7 @@ func GetUserList(pageSize, pageNum int, username string) (users []User, total in
 	return users, total, nil
 }
 
-// 检查账户密码是否正确
+// CheckAccount 检查账户密码是否正确
 func CheckAccount(username, password string) (user User, code int) {
 	err = db.Where("username = ?", username).Take(&user).Error
 	if err != nil {
@@ -134,7 +134,7 @@ func CheckAccount(username, password string) (user User, code int) {
 	return user, constant.SuccessCode
 }
 
-// 修改用户密码
+// ChangeUserPassword 修改用户密码
 // TODO:跟一般的逻辑比是否过于简单
 func ChangeUserPassword(id int, data *User) int {
 	// Select可以选择需要修改的字段， 下面的语句等效于：update user set=xxx where id=yyy
@@ -147,7 +147,7 @@ func ChangeUserPassword(id int, data *User) int {
 	return constant.SuccessCode
 }
 
-// 编辑用户信息
+// EditUserInfo 编辑用户信息
 func EditUserInfo(id int, data *User) int {
 	// TODO：传入data和传入&data的区别？？
 	var maps = make(map[string]interface{})
@@ -162,7 +162,7 @@ func EditUserInfo(id int, data *User) int {
 	return constant.SuccessCode
 }
 
-// 删除用户
+// DeleteUser 删除用户
 func DeleteUser(id int) int {
 	// 如果模型中定义了gorm.DeleteAt字段，则会具有“软删除”功能, 即并不是真正的删除，而是将DeleteAt字段更新为删除语句执行的时间
 	// 可以通过db.UnScoped().Where()查询软删除的数据，要永久删除可以使用db.UnScoped().Delete()

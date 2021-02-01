@@ -5,7 +5,7 @@ import (
 	"GopherBlog/utils"
 )
 
-// 个人信息
+// Profile 个人信息
 type Profile struct {
 	ID     int    `gorm:"primaryKey" json:"id"`
 	Name   string `gorm:"type:varchar(20)" json:"name"`
@@ -19,7 +19,7 @@ type Profile struct {
 	Avatar string `gorm:"type:varchar(200)" json:"avatar"`
 }
 
-// 获取个人信息
+// GetProfileInfo 获取个人信息
 func GetProfileInfo(id int) (Profile, int) {
 	var data Profile
 	// 或db.Select("id").Take(&data, id)
@@ -33,7 +33,7 @@ func GetProfileInfo(id int) (Profile, int) {
 	return data, constant.SuccessCode
 }
 
-// 更新个人信息
+// UpdateProfileInfo 更新个人信息
 func UpdateProfileInfo(id int, data *Profile) int {
 	err := db.Model(&Profile{}).Where("id = ?", id).Updates(&data).Error
 	if err != nil {

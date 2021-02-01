@@ -1,3 +1,4 @@
+// GoBlog
 package main
 
 import (

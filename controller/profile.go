@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-// 获取个人简介
+// GetProfileInfo 获取个人简介
 func GetProfileInfo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -21,7 +21,7 @@ func GetProfileInfo(c *gin.Context) {
 	successWithData(c, data)
 }
 
-// JWT:更新个人信息
+// UpdateProfileInfo JWT鉴权接口:更新个人信息
 func UpdateProfileInfo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

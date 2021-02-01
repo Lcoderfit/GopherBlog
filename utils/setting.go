@@ -6,7 +6,7 @@ import (
 	"gopkg.in/ini.v1"
 )
 
-// 可以定义任意数量的实例
+// Logger 可以定义任意数量的实例
 var Logger = logrus.New()
 
 var (
@@ -15,13 +15,13 @@ var (
 	DatabaseCfg = new(DatabaseConfig)
 )
 
-// 服务器配置
+// ServerConfig 服务器配置
 type ServerConfig struct {
 	AppMode  string
 	HttpPort string
 }
 
-// 数据库配置
+// DatabaseConfig 数据库配置
 type DatabaseConfig struct {
 	Type     string
 	Name     string
@@ -31,6 +31,7 @@ type DatabaseConfig struct {
 	Password string
 }
 
+// init 初始化配置
 func init() {
 	// 设置日志格式
 	Logger.SetFormatter(&logrus.TextFormatter{

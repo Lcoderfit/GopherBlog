@@ -1,3 +1,6 @@
+/*
+constant 用于存放请求处理过程中可能出现的错误状态码及状态码所代表的含义
+*/
 package constant
 
 import (
@@ -57,6 +60,7 @@ const (
 	GetCategoryInfoError  = 20403
 	CategoryNotExist      = 20404
 	EditCategoryInfoError = 20405
+	DeleteCategoryError   = 20406
 
 	// 普通级别错误-05文章模块
 	ArticleNotExistError            = 20501
@@ -81,7 +85,7 @@ const (
 	DeleteCommentError      = 20610
 )
 
-// 状态码信息
+// CodeMsg 状态码信息字典,key和value分别对应状态码(int)和状态码信息(string)
 var CodeMsg = map[int]string{
 	SuccessCode: "ok",
 
@@ -133,6 +137,7 @@ var CodeMsg = map[int]string{
 	CategoryNotExist:      "分类不存在",
 	EditCategoryInfoError: "文章分类编辑错误",
 	CreateArticleError:    "文章创建失败",
+	DeleteCategoryError:   "文章分类删除失败",
 
 	// 普通级别错误-05文章模块
 	ArticleNotExistError:            "文章信息获取失败",

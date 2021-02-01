@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// cors详见：http://www.ruanyifeng.com/blog/2016/04/cors.html
+// Cors cors详见：http://www.ruanyifeng.com/blog/2016/04/cors.html
 func Cors() gin.HandlerFunc {
 	// 1.CORS分为简单请求和非简单请求两种，非简单请求第一次发送一个预检请求，预检通过后会根据MaxAge的设定作为该预检请求的有效期，在有效期内不用再
 	// 发送预检请求，之后的请求就跟简单请求一样
