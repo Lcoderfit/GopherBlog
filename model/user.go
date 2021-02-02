@@ -148,7 +148,7 @@ func ChangeUserPassword(id int, data *User) int {
 }
 
 // EditUserInfo 编辑用户信息
-func EditUserInfo(id int, data *User) int {
+func EditUserInfo(data *User) int {
 	// TODO：传入data和传入&data的区别？？
 	var maps = make(map[string]interface{})
 	maps["username"] = data.Username

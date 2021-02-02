@@ -111,18 +111,18 @@ func ChangeUserPassword(c *gin.Context) {
 
 // EditUserInfo JWT鉴权接口:编辑用户信息
 func EditUserInfo(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-	}
+	//id, err := strconv.Atoi(c.Param("id"))
+	//if err != nil {
+	//	utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+	//	fail(c, constant.ParamError)
+	//}
 	var data model.User
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
 	}
 
-	code := model.EditUserInfo(id, &data)
+	code := model.EditUserInfo(&data)
 	if code != constant.SuccessCode {
 		fail(c, code)
 	}
