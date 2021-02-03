@@ -23,7 +23,7 @@ func InitRouter() {
 	gin.SetMode(utils.ServerCfg.AppMode)
 	r := gin.New()
 	r.HTMLRender = createMyRender()
-	//
+	// 添加log中间件，用于打印请求ip、状态码、uri等信息
 	r.Use(middleware.Log())
 	// 当出现panic时会导致程序崩溃退出，该中间件会恢复panic导致的崩溃并返回http code 500
 	r.Use(gin.Recovery())
