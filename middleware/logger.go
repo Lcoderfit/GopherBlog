@@ -15,12 +15,13 @@ import (
 
 // Log 日志中间件
 func Log() gin.HandlerFunc {
-	// 创建日志文件
-	filePath := "log/log"
+	// 创建日志文件，必须先创建log目录(OpenFile会创建最后的文件，但是不会创建父目录)
+	// 否则会报找不到路径的错误(The system cannot find the path specified)
+	filePath := "log/output.log"
 	src, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		// TODO:创建失败了怎么办？？
-		utils.Logger.Error(constant.ConvertForLog(constant.CreateLogFileError))
+		utils.Logger.Error(constant.ConvertForLog(constant.CreateLogFileError), err)
 	}
 
 	// 创建logrus实例

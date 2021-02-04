@@ -22,7 +22,7 @@ func InitRouter() {
 	// 设置项目启动模式, debug表示调试模式，test表示测试模式，release表示发布模式（用于生产环境）
 	gin.SetMode(utils.ServerCfg.AppMode)
 	r := gin.New()
-	r.HTMLRender = createMyRender()
+	//r.HTMLRender = createMyRender()
 	//
 	r.Use(middleware.Log())
 	// 当出现panic时会导致程序崩溃退出，该中间件会恢复panic导致的崩溃并返回http code 500
@@ -30,9 +30,9 @@ func InitRouter() {
 	// 支持跨域资源共享
 	r.Use(middleware.Cors())
 	// TODO: 第一个参数是URL路径，第二个参数是项目路径, 几个函数的区别是什么？？
-	r.Static("/static", "/static/front/static")
-	r.Static("/admin", "/static/admin")
-	r.StaticFile("/favicon.ico", "/static/front/favicon.ico")
+	//r.Static("/static", "/static/front/static")
+	//r.Static("/admin", "/static/admin")
+	//r.StaticFile("/favicon.ico", "/static/front/favicon.ico")
 
 	// 用户主页路由
 	r.GET("/", func(c *gin.Context) {
