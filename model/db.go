@@ -1,6 +1,7 @@
 package model
 
 import (
+	"GopherBlog/constant"
 	"GopherBlog/utils"
 	"fmt"
 	"gorm.io/driver/mysql"
@@ -17,8 +18,8 @@ var err error
 func InitDB() {
 	// data source name
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true&loc=Local",
-		utils.DatabaseCfg.Password,
 		utils.DatabaseCfg.Username,
+		utils.DatabaseCfg.Password,
 		utils.DatabaseCfg.Host,
 		utils.DatabaseCfg.Port,
 		utils.DatabaseCfg.Name,
@@ -56,16 +57,16 @@ func InitDB() {
 	})
 
 	if err != nil {
-		utils.Logger.Error("数据库连接失败: ", err)
+		utils.Logger.Error(constant.ConvertForLog(constant.DatabaseConnectError), err)
 	}
 	// 迁移数据库
 	err = db.AutoMigrate()
 	if err != nil {
-		utils.Logger.Error("数据库迁移失败： ", err)
+		utils.Logger.Error(constant.ConvertForLog(constant.DatabaseMigrateError), err)
 	}
 	sqlDB, err := db.DB()
 	if err != nil {
-		utils.Logger.Error("创建数据库实例失败： ", err)
+		utils.Logger.Error(constant.ConvertForLog(constant.DatabaseInstanceCreateError), err)
 	}
 
 	// 设置连接池最大空闲连接数，由于数据库建立连接很消耗资源，而连接池的原理即是事先建立好一定数量的连接放着

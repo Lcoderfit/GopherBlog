@@ -38,3 +38,12 @@ Q:
 12.复用代码，简化流程
 13.拦截请求，将参数校验和err处理放在中间件中进行, 使得请求处理函数可以直接使用数据，
 当在中间件中参数校验失败时，直接调用c.JSON返回（可以封装成fail函数）
+
+错误：
+一.数据库连接失败
+1.config.ini文件中的字段需要与定义的结构体字段名字相同(大小写也必须一致)
+2.dsn格式：username:passowrd@tcp(host:port)/dbName?charset=utf8&parseTime=true&loc=Local
+
+二、os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)报错：The system cannot find the path specified
+如果filePath参数传入的是带目录的路径，例如:log/output.log，则需要先创建log目录，OpenFile只会创建最后的output.log,
+不会创建父目录，所以如果不手动创建则会报错

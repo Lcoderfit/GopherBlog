@@ -23,7 +23,10 @@ const (
 	ReadServerConfigError   = 10006
 	ReadDatabaseConfigError = 10007
 
-	DatabaseAccessError = 10008
+	DatabaseAccessError         = 10008
+	DatabaseConnectError        = 10009
+	DatabaseMigrateError        = 10010
+	DatabaseInstanceCreateError = 10011
 
 	// 普通级别错误-01用户模块
 	UserAlreadyExistsError  = 20101
@@ -99,7 +102,10 @@ var CodeMsg = map[int]string{
 	ReadServerConfigError:   "读取server配置错误",
 	ReadDatabaseConfigError: "读取database配置错误",
 
-	DatabaseAccessError: "数据库访问异常",
+	DatabaseAccessError:         "数据库访问异常",
+	DatabaseConnectError:        "数据库连接失败",
+	DatabaseMigrateError:        "数据库迁移失败",
+	DatabaseInstanceCreateError: "创建数据库实例失败",
 
 	// 模块级别错误-01用户模块
 	UserAlreadyExistsError:  "用户已存在",
