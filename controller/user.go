@@ -53,6 +53,7 @@ func GetUserInfo(c *gin.Context) {
 	user, err := model.GetUserInfoById(id)
 	if err != nil {
 		fail(c, constant.GetUserInfoError)
+		return
 	}
 	successWithData(c, user)
 }
@@ -79,6 +80,7 @@ func GetUserList(c *gin.Context) {
 	users, total, err := model.GetUserList(pageSize, pageNum, username)
 	if err != nil {
 		fail(c, constant.GetUserListError)
+		return
 	}
 	data := map[string]interface{}{
 		"users": users,
