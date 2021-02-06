@@ -16,7 +16,6 @@ func success(c *gin.Context) {
 		"message": constant.CodeMsg[constant.SuccessCode],
 		"data":    nil,
 	})
-	c.Abort()
 }
 
 func successWithData(c *gin.Context, data interface{}) {
@@ -25,7 +24,6 @@ func successWithData(c *gin.Context, data interface{}) {
 		"message": constant.CodeMsg[constant.SuccessCode],
 		"data":    data,
 	})
-	c.Abort()
 }
 
 func successWithStatusCode(c *gin.Context, statusCode int, data interface{}) {
@@ -34,7 +32,6 @@ func successWithStatusCode(c *gin.Context, statusCode int, data interface{}) {
 		"message": constant.CodeMsg[constant.SuccessCode],
 		"data":    data,
 	})
-	c.Abort()
 }
 
 // fail 请求失败, 如果请求失败了，则没有必要返回data
@@ -43,7 +40,6 @@ func fail(c *gin.Context, code int) {
 		"code":  code,
 		"error": constant.CodeMsg[code],
 	})
-	c.Abort()
 }
 
 // failWithData 请求失败，并返回data
@@ -53,5 +49,4 @@ func failWithData(c *gin.Context, code int, data interface{}) {
 		"error": constant.CodeMsg[code],
 		"data":  data,
 	})
-	c.Abort()
 }
