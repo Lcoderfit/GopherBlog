@@ -110,7 +110,7 @@ var CodeMsg = map[int]string{
 	// 模块级别错误-01用户模块
 	UserAlreadyExistsError:  "用户已存在",
 	CreateUserError:         "用户创建失败",
-	GetUserInfoError:        "获取用户信息失败",
+	GetUserInfoError:        "用户信息获取失败",
 	GetUserListError:        "获取用户列表失败",
 	UsernameNotExistsError:  "用户名不存在",
 	UserPasswordError:       "密码错误",

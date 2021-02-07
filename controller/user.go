@@ -25,19 +25,19 @@ func AddUser(c *gin.Context) {
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.DataVerificationError), err)
 		failWithData(c, constant.DataVerificationError, msg)
-		// 当上面的响应报错时，调用c.Abort()可以确保其不会影响下面的请求处理程序
-		//c.Abort()
 	}
 
 	if ok := model.IsUserExist(data.Username); ok {
 		// 能否重写Info函数
 		utils.Logger.Info(constant.ConvertForLog(constant.UserAlreadyExistsError))
 		fail(c, constant.UserAlreadyExistsError)
+		return
 	}
 
 	// TODO:创建model需要传入指针，为什么？？
 	if err := model.CreateUser(&data); err != nil {
 		fail(c, constant.CreateUserError)
+		return
 	}
 	// TODO：是否需要对请求成功的情况进行状态码分级
 	success(c)
@@ -48,6 +48,13 @@ func GetUserInfo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+	}
+	var data model.User
+	// 这里报错不直接返回，因为需要后面调用验证器返回哪个参数有问题的信息
+	if err := c.ShouldBindJSON(&data); err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		fail(c, constant.ParamError)
+		return
 	}
 
 	user, err := model.GetUserInfoById(id)
@@ -96,6 +103,7 @@ func ChangeUserPassword(c *gin.Context) {
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
 
 	var data model.User
@@ -103,10 +111,12 @@ func ChangeUserPassword(c *gin.Context) {
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
 	code := model.ChangeUserPassword(id, &data)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	success(c)
 }
