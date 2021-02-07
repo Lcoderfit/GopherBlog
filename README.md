@@ -38,6 +38,9 @@ Q:
 12.复用代码，简化流程
 13.拦截请求，将参数校验和err处理放在中间件中进行, 使得请求处理函数可以直接使用数据，
 当在中间件中参数校验失败时，直接调用c.JSON返回（可以封装成fail函数）
+// 14.如果c.Next()和c.Abort()有多层嵌套，则执行顺序是怎样的？？
+15.设置了JSONFormatter输出还是text格式
+16.对项目进行热部署，修改代码可以实时热更新
 
 错误：
 一.数据库连接失败
@@ -47,3 +50,6 @@ Q:
 二、os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)报错：The system cannot find the path specified
 如果filePath参数传入的是带目录的路径，例如:log/output.log，则需要先创建log目录，OpenFile只会创建最后的output.log,
 不会创建父目录，所以如果不手动创建则会报错
+
+
+

@@ -50,8 +50,9 @@ func Log() gin.HandlerFunc {
 		logrus.FatalLevel: logWriter,
 		logrus.PanicLevel: logWriter,
 	}
-	// 创建hook函数,TODO:
-	hook := lfshook.NewHook(writerMap, &logrus.TextFormatter{
+	// 创建hook函数,TODO: hook
+	// TODO:这里设置了JSONFormatter输出还是text格式
+	hook := lfshook.NewHook(writerMap, &logrus.JSONFormatter{
 		TimestampFormat: "2006-01-02 15:04:05",
 	})
 	// 添加hook到logrus
