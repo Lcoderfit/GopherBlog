@@ -113,6 +113,8 @@ func InitRouter() {
 		router.GET("/comment/info/:id", controller.GetCommentInfo)
 		router.GET("/comment_count", controller.GetCommentCount)
 		router.GET("/comment/list/:id", controller.GetCommentList)
+
+		router.POST("/test", controller.Test)
 	}
 
 	// 运行项目

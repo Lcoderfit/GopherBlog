@@ -2,8 +2,10 @@ package utils
 
 import (
 	"GopherBlog/constant"
+	"github.com/shiena/ansicolor"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
+	"os"
 )
 
 // Logger 可以定义任意数量的实例
@@ -39,6 +41,9 @@ func init() {
 		FullTimestamp:   true,
 		TimestampFormat: "2006-01-02 15:04:05",
 	})
+	// fix:解决logrus在windows终端下输出无颜色区别的问题
+	Logger.SetOutput(ansicolor.NewAnsiColorWriter(os.Stdout))
+
 	// 设置日志级别， logrus默认级别是什么？？
 	// 当使用Fatal及以上级别打印日志消息时，调用Fatal或Panic函数，在调用位置之后的程序将不会执行
 	Logger.SetLevel(logrus.DebugLevel)
