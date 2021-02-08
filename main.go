@@ -2,13 +2,16 @@
 package main
 
 import (
-	"GopherBlog/model"
-	"GopherBlog/routes"
+	"fmt"
+	"strconv"
 )
 
 func main() {
-	// 初始化数据库
-	model.InitDB()
-	// 初始化路由
-	routes.InitRouter()
+	a, err := strconv.Atoi("1a0")
+	fmt.Println(a, err)
+
+	//// 初始化数据库
+	//model.InitDB()
+	//// 初始化路由
+	//routes.InitRouter()
 }

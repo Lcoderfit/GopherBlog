@@ -41,6 +41,12 @@ Q:
 // 14.如果c.Next()和c.Abort()有多层嵌套，则执行顺序是怎样的？？
 15.设置了JSONFormatter输出还是text格式
 16.对项目进行热部署，修改代码可以实时热更新
+17.c.ShouldBindJSON(&data), 如果data有多个字段，但是请求中只包含其中部分字段，则会设置那一部分字段的值，其他字段会取默认值；
+请求的参数与data中字段名的对应关系对大小写不敏感，例如请求中有个字段“id”， 但是data中的字段为ID，也是可以匹配的；
+如果请求中同时存在"id"和“ID”，id在ID上面，则会取更下面的（即“ID”）字段值传给data中的字段
+但是有一个问题，内嵌了gorm.Model的结构体，在输出结构体实例的时候ID，CreateAt，UpdateAt，DeleteAt都是大写的
+
+18.通过goland的configuration的environment选项可以绕过管理员权限修改环境变量
 
 错误：
 一.数据库连接失败
@@ -50,6 +56,23 @@ Q:
 二、os.OpenFile(filePath, os.O_RDWR|os.O_CREATE, 0755)报错：The system cannot find the path specified
 如果filePath参数传入的是带目录的路径，例如:log/output.log，则需要先创建log目录，OpenFile只会创建最后的output.log,
 不会创建父目录，所以如果不手动创建则会报错
+
+三、内嵌了gorm.Model的结构体，通过响应返回实例时候ID，CreateAt，UpdateAt，DeleteAt都是大写的
+需要修改gorm中model.go的源码，添加json tag
+
+四、gorm.Model中的CreateAt，UpdateAt，DeleteAt时区错误
+
+五、windows终端下logrus打印日志没有颜色
+import "github.com/shiena/ansicolor"
+Logger.SetFormatter(&logrus.TextFormatter{
+    ForceColors:     true,  // 这个要设置为true
+})
+// fix:解决logrus在windows终端下输出无颜色区别的问题
+Logger.SetOutput(ansicolor.NewAnsiColorWriter(os.Stdout))
+
+六、Only one usage of each socket address (protocol/network address/port)
+每个套接字地址只有一种用法，也就是说端口被其他程序占用了
+
 
 
 

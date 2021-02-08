@@ -52,7 +52,8 @@ func Log() gin.HandlerFunc {
 	}
 	// 创建hook函数,TODO: hook
 	// TODO:这里设置了JSONFormatter输出还是text格式
-	hook := lfshook.NewHook(writerMap, &logrus.JSONFormatter{
+	hook := lfshook.NewHook(writerMap, &logrus.TextFormatter{
+		ForceColors:     true,
 		TimestampFormat: "2006-01-02 15:04:05",
 	})
 	// 添加hook到logrus
