@@ -75,7 +75,7 @@ func InitRouter() {
 
 		// 评论模块
 		auth.GET("/admin/comment/list/:id", controller.GetCommentList)
-		auth.PUT("/check_comment/:id", controller.ApproveComment)
+		auth.PUT("/check-comment/:id", controller.ApproveComment)
 		auth.PUT("/uncheck_comment/:id", controller.TakeDownComment)
 		auth.DELETE("/comment/:id", controller.DeleteComment)
 	}
@@ -111,7 +111,7 @@ func InitRouter() {
 		// 评论模块
 		router.POST("/comment/add", controller.AddComment)
 		router.GET("/comment/info/:id", controller.GetCommentInfo)
-		router.GET("/comment_count", controller.GetCommentCount)
+		router.GET("/comment-count", controller.GetCommentCount)
 		router.GET("/comment/list/:id", controller.GetCommentList)
 
 		router.POST("/test", controller.Test)

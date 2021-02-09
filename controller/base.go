@@ -50,7 +50,3 @@ func failWithData(c *gin.Context, code int, data interface{}) {
 		"data":  data,
 	})
 }
-
-func DetailParams(f func()) {
-
-}

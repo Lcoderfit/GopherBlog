@@ -46,7 +46,17 @@ Q:
 如果请求中同时存在"id"和“ID”，id在ID上面，则会取更下面的（即“ID”）字段值传给data中的字段
 但是有一个问题，内嵌了gorm.Model的结构体，在输出结构体实例的时候ID，CreateAt，UpdateAt，DeleteAt都是大写的
 
-18.通过goland的configuration的environment选项可以绕过管理员权限修改环境变量
+//18.通过goland的configuration的environment选项可以绕过管理员权限修改环境变量
+//19.post/put方法一般会传递json数据，而get和delete方法传递的一般是路由参数（Param）或者url参数（Query）;
+路由参数和url参数不可避免的需要手动对数据进行校验
+20.后端针对get请求的url或者路由参数先采取直接返回策略，等前后端联调时再进行架构考虑
+21.rest设计规范，注意：由HTTP动词+URI名词组成，URI中不能包含动词；
+URI中的名词均用复数表示；
+使用连字符‘-’提高url可读性，而不是下划线;
+末尾不以‘/’结尾
+get /v1/users
+get /v1/users/id
+get /v1/users
 
 错误：
 一.数据库连接失败
@@ -61,6 +71,14 @@ Q:
 需要修改gorm中model.go的源码，添加json tag
 
 四、gorm.Model中的CreateAt，UpdateAt，DeleteAt时区错误
+gorm.Model中的CreateAt和UpdateAt为time.Time类型，而DeleteAt为sql.NullTime类型（结构体）
+type NullTime struct {
+	Time  time.Time
+	Valid bool // Valid is true if Time is not NULL
+}
+bak.sql的测试数据中id=1的用户创建时间、更新时间、删除时间均为null，所以从数据库中取出来之后，删除时间为null，
+而创建时间和更新时间为time.Time的零值，即：0001-01-01 00:00:00 +0000 UTC（apifox取出来为：0001-01-01T00:00:00Z）
+Z就是世界协调时间，跟UTC是一样的
 
 五、windows终端下logrus打印日志没有颜色
 import "github.com/shiena/ansicolor"
@@ -72,6 +90,7 @@ Logger.SetOutput(ansicolor.NewAnsiColorWriter(os.Stdout))
 
 六、Only one usage of each socket address (protocol/network address/port)
 每个套接字地址只有一种用法，也就是说端口被其他程序占用了
+
 
 
 

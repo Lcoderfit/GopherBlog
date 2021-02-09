@@ -81,14 +81,15 @@ func EncryptPassword(password string) (string, error) {
 }
 
 // GetUserInfoById 通过用户ID获取用户数据
-func GetUserInfoById(id int) (User, error) {
+func GetUserInfoById(id int) (User, int) {
 	var user User
+	// 如果没找到会返回record not found错误
 	err := db.Where("id = ?", id).Take(&user).Error
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.GetUserInfoError), err)
-		return user, err
+		utils.Logger.Error(constant.ConvertForLog(constant.UserNotExistError), err)
+		return user, constant.UserNotExistError
 	}
-	return user, nil
+	return user, constant.SuccessCode
 }
 
 // GetUserList 获取用户列表

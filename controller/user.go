@@ -50,18 +50,10 @@ func GetUserInfo(c *gin.Context) {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		return
 	}
-	var data model.User
-	// 这里报错不直接返回，因为需要后面调用验证器返回哪个参数有问题的信息
-	if err := c.ShouldBindJSON(&data); err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-		return
-	}
-	utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 
-	user, err := model.GetUserInfoById(id)
-	if err != nil {
-		fail(c, constant.GetUserInfoError)
+	user, code := model.GetUserInfoById(id)
+	if code != constant.SuccessCode {
+		fail(c, code)
 		return
 	}
 	successWithData(c, user)
