@@ -5,8 +5,10 @@ package controller
 
 import (
 	"GopherBlog/constant"
+	"GopherBlog/utils"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 // success 请求成功
@@ -49,4 +51,25 @@ func failWithData(c *gin.Context, code int, data interface{}) {
 		"error": constant.CodeMsg[code],
 		"data":  data,
 	})
+}
+
+func MustInt(f func(string) string, param string) (result int, err error) {
+	result, err = strconv.Atoi(f(param))
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), param+", ", err)
+		return result, err
+	}
+	return result, nil
+}
+
+func MustIntArray(f func(string) string, params ...string) (results []int, err error) {
+	for _, v := range params {
+		param, err := strconv.Atoi(f(v))
+		if err != nil {
+			utils.Logger.Error(constant.ConvertForLog(constant.ParamError), v+", ", err)
+			return nil, err
+		}
+		results = append(results, param)
+	}
+	return results, nil
 }

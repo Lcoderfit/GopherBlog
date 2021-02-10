@@ -15,18 +15,19 @@ const (
 
 	// 系统级别错误
 	ServerError           = 10001
-	ParamError            = 10002
-	SetValidatorError     = 10003
-	DataVerificationError = 10004
+	StartProjectError     = 10002
+	ParamError            = 10003
+	SetValidatorError     = 10004
+	DataVerificationError = 10005
 	// TODO:是否需要继续拆分code等级
-	ReadConfigFileError     = 10005
-	ReadServerConfigError   = 10006
-	ReadDatabaseConfigError = 10007
+	ReadConfigFileError     = 10006
+	ReadServerConfigError   = 10007
+	ReadDatabaseConfigError = 10008
 
-	DatabaseAccessError         = 10008
-	DatabaseConnectError        = 10009
-	DatabaseMigrateError        = 10010
-	DatabaseInstanceCreateError = 10011
+	DatabaseAccessError         = 10009
+	DatabaseConnectError        = 10010
+	DatabaseMigrateError        = 10011
+	DatabaseInstanceCreateError = 10012
 
 	// 普通级别错误-01用户模块
 	UserAlreadyExistsError  = 20101
@@ -94,6 +95,7 @@ var CodeMsg = map[int]string{
 
 	// 系统级别错误
 	ServerError:           "服务异常",
+	StartProjectError:     "项目启动失败",
 	ParamError:            "参数错误",
 	SetValidatorError:     "翻译器设置失败",
 	DataVerificationError: "数据校验错误",

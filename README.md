@@ -57,6 +57,14 @@ URI中的名词均用复数表示；
 get /v1/users
 get /v1/users/id
 get /v1/users
+post /v1/users
+
+22.id一般作为路由参数，page_num,page_size，limit这种一般作为详情参数
+
+
+23.
+
+
 
 错误：
 一.数据库连接失败
