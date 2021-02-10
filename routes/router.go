@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"GopherBlog/constant"
 	"GopherBlog/controller"
 	"GopherBlog/middleware"
 	"GopherBlog/utils"
@@ -92,27 +93,27 @@ func InitRouter() {
 		//router.POST("/login_front", controller.LoginFront)
 
 		// 用户信息模块
-		router.POST("/user/add", controller.AddUser)
-		router.GET("/user/:id", controller.GetUserInfo)
+		router.POST("/users", controller.AddUser)
+		router.GET("/users/:id", controller.GetUserInfo)
 		router.GET("/users", controller.GetUserList)
 
 		// 获取个人信息
-		router.GET("/profile/:id", controller.GetProfileInfo)
+		router.GET("/profiles/:id", controller.GetProfileInfo)
 
 		// 文章分类模块
 		router.GET("/categories", controller.GetCategoryList)
-		router.GET("/category/:id", controller.GetCategoryInfo)
+		router.GET("/categories/:id", controller.GetCategoryInfo)
 
 		// 文章模块
-		router.GET("/article/info/:id", controller.GetArticleInfo)
+		router.GET("/articles/:id", controller.GetArticleInfo)
 		router.GET("/articles", controller.GetArticleList)
-		router.GET("/article/list/:id", controller.GetArticleListByCategoryId) // 获取同一分类的所有文章
+		router.GET("/categories/:id/articles", controller.GetArticleListByCategoryId) // 获取同一分类的所有文章
 
 		// 评论模块
-		router.POST("/comment/add", controller.AddComment)
-		router.GET("/comment/info/:id", controller.GetCommentInfo)
-		router.GET("/comment-count", controller.GetCommentCount)
-		router.GET("/comment/list/:id", controller.GetCommentList)
+		router.POST("/comments", controller.AddComment)
+		router.GET("/comments/:id", controller.GetCommentInfo)
+		router.GET("/comments-count", controller.GetCommentCount)
+		router.GET("/articles/:id/comments", controller.GetCommentList)
 
 		router.POST("/test", controller.Test)
 	}
@@ -120,6 +121,6 @@ func InitRouter() {
 	// 运行项目
 	err := r.Run(utils.ServerCfg.HttpPort)
 	if err != nil {
-		utils.Logger.Error("项目启动失败: ", err)
+		utils.Logger.Panic(constant.ConvertForLog(constant.StartProjectError), err)
 	}
 }

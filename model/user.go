@@ -96,7 +96,7 @@ func GetUserInfoById(id int) (User, int) {
 // 可能存储非常多的数据，total需要用长整型
 func GetUserList(pageSize, pageNum int, username string) (users []User, total int64, err error) {
 	if username != "" {
-		err = db.Select("id, user, role").Where(
+		err = db.Select("id, username, role").Where(
 			"username like ?", "%"+username+"%",
 		).Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
 	} else {

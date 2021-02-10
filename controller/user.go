@@ -45,9 +45,8 @@ func AddUser(c *gin.Context) {
 
 // GetUserInfo 获取单个用户信息
 func GetUserInfo(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		return
 	}
 
@@ -61,8 +60,11 @@ func GetUserInfo(c *gin.Context) {
 
 // GetUserList 获取用户列表
 func GetUserList(c *gin.Context) {
-	pageSize, err := strconv.Atoi(c.Query("page_size"))
-	pageNum, err := strconv.Atoi(c.Query("page_num"))
+	results, err := MustIntArray(c.Query, "page_size", "page_num")
+	if err != nil {
+		return
+	}
+	pageSize, pageNum := results[0], results[1]
 	username := c.Query("username")
 
 	// 对每一页的数量上下限进行限制
@@ -74,7 +76,7 @@ func GetUserList(c *gin.Context) {
 		pageSize = 10
 	}
 
-	if pageNum == 0 {
+	if pageNum <= 0 {
 		pageNum = 1
 	}
 
