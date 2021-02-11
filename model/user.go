@@ -56,6 +56,7 @@ func (u *User) BeforeSave(_ *gorm.DB) (err error) {
 		utils.Logger.Error(constant.ConvertForLog(constant.SavePasswordError))
 		return
 	}
+	utils.Logger.Info("password: ", u.Password)
 	return
 }
 

@@ -99,6 +99,8 @@ Logger.SetOutput(ansicolor.NewAnsiColorWriter(os.Stdout))
 六、Only one usage of each socket address (protocol/network address/port)
 每个套接字地址只有一种用法，也就是说端口被其他程序占用了
 
+七、密码加密导致密码长度超过数据库限制
+
 
 
 

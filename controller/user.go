@@ -19,12 +19,14 @@ func AddUser(c *gin.Context) {
 	// 这里报错不直接返回，因为需要后面调用验证器返回哪个参数有问题的信息
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		return
 	}
 
 	msg, err := validator.Validate(data)
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.DataVerificationError), err)
 		failWithData(c, constant.DataVerificationError, msg)
+		return
 	}
 
 	if ok := model.IsUserExist(data.Username); ok {
