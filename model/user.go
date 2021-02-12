@@ -40,13 +40,13 @@ func IsUserExist(name string) bool {
 }
 
 // CreateUser 创建新用户, 实现BeforeSave和BeforeUpdate接口，对密码进行创建和更新时都会自动进行加密
-func CreateUser(data *User) error {
+func CreateUser(data *User) int {
 	err := db.Create(data).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.CreateUserError), err)
-		return err
+		return constant.CreateUserError
 	}
-	return nil
+	return constant.SuccessCode
 }
 
 // BeforeSave 保存密码到数据库中时，自动对密码进行加密
@@ -129,10 +129,10 @@ func CheckAccount(username, password string) (user User, code int) {
 		utils.Logger.Error(constant.ConvertForLog(constant.UserPasswordError), err)
 		return user, constant.UserPasswordError
 	}
-	if user.Role != 1 {
-		utils.Logger.Error(constant.ConvertForLog(constant.UserRoleError), err)
-		return user, constant.UserRoleError
-	}
+	//if user.Role != 1 {
+	//	utils.Logger.Error(constant.ConvertForLog(constant.UserRoleError), err)
+	//	return user, constant.UserRoleError
+	//}
 	return user, constant.SuccessCode
 }
 

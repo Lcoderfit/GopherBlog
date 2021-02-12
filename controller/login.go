@@ -14,19 +14,20 @@ func Login(c *gin.Context) {
 	var data model.User
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		return
 	}
 
 	msg, err := validator.Validate(data)
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.DataVerificationError), err)
 		failWithData(c, constant.DataVerificationError, msg)
+		return
 	}
 
 	// 检查用户名跟密码是否正确
 	var code int
 	data, code = model.CheckAccount(data.Username, data.Password)
 	if code != constant.SuccessCode {
-		// TODO:遇到c.JSON是否不会返回？？
 		fail(c, code)
 		return
 	}
@@ -35,6 +36,7 @@ func Login(c *gin.Context) {
 	token, code := middleware.SetToken(data.Username)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 
 	// 返回token到客户端
