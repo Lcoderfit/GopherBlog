@@ -31,14 +31,14 @@ func AddUser(c *gin.Context) {
 
 	if ok := model.IsUserExist(data.Username); ok {
 		// 能否重写Info函数
-		utils.Logger.Info(constant.ConvertForLog(constant.UserAlreadyExistsError))
+		utils.Logger.Error(constant.ConvertForLog(constant.UserAlreadyExistsError))
 		fail(c, constant.UserAlreadyExistsError)
 		return
 	}
 
 	// TODO:创建model需要传入指针，为什么？？
-	if err := model.CreateUser(&data); err != nil {
-		fail(c, constant.CreateUserError)
+	if code := model.CreateUser(&data); code != constant.SuccessCode {
+		fail(c, code)
 		return
 	}
 	// TODO：是否需要对请求成功的情况进行状态码分级
