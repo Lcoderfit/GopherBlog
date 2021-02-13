@@ -38,30 +38,26 @@ func AddCategory(c *gin.Context) {
 
 // GetCategoryInfo 获取分类信息
 func GetCategoryInfo(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
 	data, code := model.GetCategoryInfo(id)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	successWithData(c, data)
 }
 
 // GetCategoryList 获取分类列表
 func GetCategoryList(c *gin.Context) {
-	pageNum, err := strconv.Atoi(c.Param("pageNum"))
+	results, err := MustIntArray(c.Query, "page_number", "page_size")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
+		return
 	}
-	pageSize, err := strconv.Atoi(c.Param("pageSize"))
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-	}
+	pageNum, pageSize := results[0], results[1]
 
 	// 设置每页的数据量上下限
 	if pageSize < 10 {
@@ -69,7 +65,7 @@ func GetCategoryList(c *gin.Context) {
 	} else if pageSize > 100 {
 		pageSize = 100
 	}
-	if pageNum < 0 {
+	if pageNum <= 0 {
 		pageNum = 1
 	}
 
@@ -77,6 +73,7 @@ func GetCategoryList(c *gin.Context) {
 	categories, code := model.GetCategoryList(pageSize, pageNum)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	successWithData(c, categories)
 }

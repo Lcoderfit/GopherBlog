@@ -101,8 +101,8 @@ func InitRouter() {
 		router.GET("/profiles/:id", controller.GetProfileInfo)
 
 		// 文章分类模块
-		router.GET("/categories", controller.GetCategoryList)
 		router.GET("/categories/:id", controller.GetCategoryInfo)
+		router.GET("/categories", controller.GetCategoryList)
 
 		// 文章模块
 		router.GET("/articles/:id", controller.GetArticleInfo)

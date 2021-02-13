@@ -102,7 +102,12 @@ Logger.SetOutput(ansicolor.NewAnsiColorWriter(os.Stdout))
 七、密码加密导致密码长度超过数据库限制
 将数据库字段长度调大，sql：
 
+八、data返回格式不统一：单个数据返回字典，多个数据返回列表？？
 
+九、db.Find(&data).Limit(pageSize).Offset((pageNum - 1) * pageSize).Error
+无论怎么查data都会保存数据库里的数据
+
+改成：db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error就没有问题
 
 
 

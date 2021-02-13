@@ -40,22 +40,18 @@ func GetCategoryInfo(id int) (Category, int) {
 	var data Category
 	err := db.Where("id = ?", id).Take(&data).Error
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.GetCategoryInfoError), err)
-		return data, constant.GetCategoryInfoError
+		utils.Logger.Error(constant.ConvertForLog(constant.CategoryNotExistError), err)
+		return data, constant.CategoryNotExistError
 	}
 	return data, constant.SuccessCode
 }
 
 // GetCategoryList 获取文章分类列表
 func GetCategoryList(pageSize, pageNum int) (data []Category, code int) {
-	err := db.Find(&data).Limit(pageSize).Offset(pageSize * (pageNum - 1)).Error
+	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.DatabaseAccessError), err)
 		return data, constant.DatabaseAccessError
-	}
-	if len(data) == 0 {
-		utils.Logger.Error(constant.ConvertForLog(constant.CategoryNotExist), err)
-		return data, constant.CategoryExistError
 	}
 	return data, constant.SuccessCode
 }

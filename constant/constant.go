@@ -62,7 +62,7 @@ const (
 	CategoryExistError    = 20401
 	CreateCategoryError   = 20402
 	GetCategoryInfoError  = 20403
-	CategoryNotExist      = 20404
+	CategoryNotExistError = 20404
 	EditCategoryInfoError = 20405
 	DeleteCategoryError   = 20406
 
@@ -142,7 +142,7 @@ var CodeMsg = map[int]string{
 	CategoryExistError:    "分类已存在",
 	CreateCategoryError:   "新增分类失败",
 	GetCategoryInfoError:  "分类获取失败",
-	CategoryNotExist:      "分类不存在",
+	CategoryNotExistError: "分类不存在",
 	EditCategoryInfoError: "文章分类编辑错误",
 	CreateArticleError:    "文章创建失败",
 	DeleteCategoryError:   "文章分类删除失败",
