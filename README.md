@@ -62,9 +62,11 @@ post /v1/users
 22.id一般作为路由参数，page_num,page_size，limit这种一般作为详情参数
 
 
-23.
-
-
+23.First/Take/Last方法如果没有找到都会返回gorm.ErrRecordNotFound错误
+Find方法不会返回ErrRecordNotFound错误，但是使用limit和offeset时候需要
+先使用limit和offeset再使用find，否则得到的结果集将一直是全集
+正确用法：db.Limit().Offeset().Find(&data)
+错误：db.Find(&data).Limit().Offeset()
 
 错误：
 一.数据库连接失败
