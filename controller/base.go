@@ -66,6 +66,7 @@ func MustIntArray(f func(string) string, params ...string) (results []int, err e
 	for _, v := range params {
 		param, err := strconv.Atoi(f(v))
 		if err != nil {
+			// TODO：是否将该log信息附加再err中返回，或者作为err code返回
 			utils.Logger.Error(constant.ConvertForLog(constant.ParamError), v+", ", err)
 			return nil, err
 		}

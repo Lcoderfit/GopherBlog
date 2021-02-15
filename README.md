@@ -68,6 +68,15 @@ Find方法不会返回ErrRecordNotFound错误，但是使用limit和offeset时�
 正确用法：db.Limit().Offeset().Find(&data)
 错误：db.Find(&data).Limit().Offeset()
 
+24.获取分类列表接口不传入分页参数时，是否返回默认排序的第一页数据
+
+25.Preload中的字段大小写不敏感，例如结构体为Category，则db.Preload("category")...也是有效的
+不过一般都使用db.Preload("Category")....
+
+model中定义模型时，gorm标签的gorm:"foreignKey:Cid"也是大小写不敏感的
+
+26.page_number和page_size参数需要对err进行忽略，因为如果传入参数错误需要保证返回默认的数据列表页
+
 错误：
 一.数据库连接失败
 1.config.ini文件中的字段需要与定义的结构体字段名字相同(大小写也必须一致)

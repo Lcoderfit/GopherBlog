@@ -95,7 +95,7 @@ func GetUserInfoById(id int) (User, int) {
 
 // GetUserList 获取用户列表
 // 可能存储非常多的数据，total需要用长整型
-func GetUserList(pageSize, pageNum int, username string) (users []User, total int64, err error) {
+func GetUserList(pageSize, pageNum int, username string) (users []User, total int64, code int) {
 	if username != "" {
 		err = db.Select("id, username, role").Where(
 			"username like ?", "%"+username+"%",
@@ -105,10 +105,10 @@ func GetUserList(pageSize, pageNum int, username string) (users []User, total in
 	}
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.GetUserListError), err)
-		return nil, total, err
+		return nil, total, constant.GetUserListError
 	}
 	total = int64(len(users))
-	return users, total, nil
+	return users, total, constant.SuccessCode
 }
 
 // CheckAccount 检查账户密码是否正确

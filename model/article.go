@@ -7,7 +7,6 @@ import (
 )
 
 // Article 文章结构体
-// TODO：foreignKey标签后面的字段名是否大小写敏感？？
 type Article struct {
 	gorm.Model
 	Category     Category `gorm:"foreignKey:Cid"`
@@ -22,7 +21,6 @@ type Article struct {
 
 // GetArticleInfo 获取单个文章信息
 func GetArticleInfo(id int) (article Article, code int) {
-	// TODO:Preload中的字段名是否大小写敏感
 	// Find不会返回ErrRecordNotFound， 但是First和Take会
 	err := db.Preload("Category").Where("id = ?", id).Take(&article).Error
 	if err != nil {
@@ -48,7 +46,7 @@ func GetArticleList(title string, pageSize, pageNum int) (articles []Article, to
 	// 默认按照时间降序排序
 	if title == "" {
 		err := db.Limit(pageSize).Offset(pageSize * (pageNum - 1)).Order(
-			"create_at desc",
+			"created_at desc",
 		).Preload("Category").Find(&articles).Error
 		if err != nil {
 			utils.Logger.Error(constant.ConvertForLog(constant.GetArticleListInfoError), err)
@@ -63,7 +61,7 @@ func GetArticleList(title string, pageSize, pageNum int) (articles []Article, to
 		}
 	} else {
 		err := db.Limit(pageSize).Offset(pageSize*(pageNum-1)).Order(
-			"create_at desc",
+			"created_at desc",
 		).Preload("Category").Where("title like ?", "%"+title+"%").Find(&articles).Error
 		if err != nil {
 			utils.Logger.Error(constant.ConvertForLog(constant.GetArticleListInfoError), err)
@@ -83,7 +81,7 @@ func GetArticleListByCategoryId(id, pageSize, pageNum int) (articles []Article, 
 	// TODO:Preload先后顺序是否对结果有影响
 	err := db.Preload("Category").Where("cid = ?", id).Limit(pageSize).Offset(
 		pageSize * (pageNum - 1),
-	).Order("create_at desc").Find(&articles).Error
+	).Order("created_at desc").Find(&articles).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.GetArticleListByCategoryIdError), err)
 		return articles, 0, constant.GetArticleListByCategoryIdError

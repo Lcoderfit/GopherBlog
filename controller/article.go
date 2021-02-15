@@ -10,32 +10,27 @@ import (
 
 // GetArticleInfo 获取单个文章信息
 func GetArticleInfo(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
 
 	data, code := model.GetArticleInfo(id)
 	if code != constant.SuccessCode {
 		// TODO:如果阅读量更新失败，但是文章正常获取到了还是可以返回
-		failWithData(c, code, data)
+		fail(c, code)
+		return
 	}
 	successWithData(c, data)
 }
 
 // GetArticleList 获取文章列表
 func GetArticleList(c *gin.Context) {
-	pageSize, err := strconv.Atoi(c.Param("pageSize"))
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-	}
-	pageNum, err := strconv.Atoi(c.Param("pageNum"))
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-	}
+	// 如果传入的参数错误，那会页码和每页的数据个数取默认值，后面仍然能正常返回数据
+	// 如果这里对错误进行处理并返回，则文章列表显示为空
+	pageNum, _ := strconv.Atoi(c.Query("page_number"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
 	// 根据标题进行搜索
 	title := c.Query("title")
 
@@ -44,7 +39,6 @@ func GetArticleList(c *gin.Context) {
 	} else if pageSize > 100 {
 		pageSize = 100
 	}
-
 	if pageNum <= 0 {
 		pageNum = 1
 	}
@@ -52,34 +46,27 @@ func GetArticleList(c *gin.Context) {
 	articles, total, code := model.GetArticleList(title, pageSize, pageNum)
 	if code != constant.SuccessCode {
 		failWithData(c, code, gin.H{
-			"data":  articles,
-			"total": total,
+			"article_list": articles,
+			"total":        total,
 		})
+		return
 	}
 	// TODO:修改响应模式，支持自动total
 	successWithData(c, gin.H{
-		"data":  articles,
-		"total": total,
+		"article_list": articles,
+		"total":        total,
 	})
 }
 
 // GetArticleListByCategoryId 获取同一分类下的文章
 func GetArticleListByCategoryId(c *gin.Context) {
-	pageSize, err := strconv.Atoi(c.Param("page_size"))
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-	}
-	pageNum, err := strconv.Atoi(c.Param("page_num"))
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-	}
+	pageNum, _ := strconv.Atoi(c.Query("page_number"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
 	// 获取分类id
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
 
 	if pageSize < 10 {
@@ -94,13 +81,14 @@ func GetArticleListByCategoryId(c *gin.Context) {
 	articles, total, code := model.GetArticleListByCategoryId(id, pageSize, pageNum)
 	if code != constant.SuccessCode {
 		failWithData(c, code, gin.H{
-			"data":  articles,
-			"total": total,
+			"category_list": articles,
+			"total":         total,
 		})
+		return
 	}
 	successWithData(c, gin.H{
-		"data":  articles,
-		"total": total,
+		"category_list": articles,
+		"total":         total,
 	})
 }
 
