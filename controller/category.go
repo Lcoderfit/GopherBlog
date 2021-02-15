@@ -53,11 +53,8 @@ func GetCategoryInfo(c *gin.Context) {
 
 // GetCategoryList 获取分类列表
 func GetCategoryList(c *gin.Context) {
-	results, err := MustIntArray(c.Query, "page_number", "page_size")
-	if err != nil {
-		return
-	}
-	pageNum, pageSize := results[0], results[1]
+	pageNum, _ := strconv.Atoi(c.Query("page_number"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
 
 	// 设置每页的数据量上下限
 	if pageSize < 10 {

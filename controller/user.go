@@ -62,11 +62,8 @@ func GetUserInfo(c *gin.Context) {
 
 // GetUserList 获取用户列表
 func GetUserList(c *gin.Context) {
-	results, err := MustIntArray(c.Query, "page_size", "page_num")
-	if err != nil {
-		return
-	}
-	pageSize, pageNum := results[0], results[1]
+	pageNum, _ := strconv.Atoi(c.Query("page_number"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
 	username := c.Query("username")
 
 	// 对每一页的数量上下限进行限制
@@ -82,14 +79,14 @@ func GetUserList(c *gin.Context) {
 		pageNum = 1
 	}
 
-	users, total, err := model.GetUserList(pageSize, pageNum, username)
-	if err != nil {
-		fail(c, constant.GetUserListError)
+	users, total, code := model.GetUserList(pageSize, pageNum, username)
+	if code != constant.SuccessCode {
+		fail(c, code)
 		return
 	}
 	data := map[string]interface{}{
-		"users": users,
-		"total": total,
+		"user_list": users,
+		"total":     total,
 	}
 	successWithData(c, data)
 }
