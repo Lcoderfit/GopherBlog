@@ -112,7 +112,7 @@ func InitRouter() {
 		// 评论模块
 		router.POST("/comments", controller.AddComment)
 		router.GET("/comments/:id", controller.GetCommentInfo)
-		router.GET("/comments-count", controller.GetCommentCount)
+		router.GET("/articles/:id/comments-count", controller.GetCommentCount)
 		router.GET("/articles/:id/comments", controller.GetCommentList)
 
 		router.POST("/test", controller.Test)

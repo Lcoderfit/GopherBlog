@@ -32,16 +32,16 @@ func CreateComment(data *Comment) int {
 func GetCommentInfo(id int) (comment Comment, code int) {
 	err := db.Where("id = ?", id).Take(&comment).Error
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.GetCommentInfoError), err)
-		return comment, constant.GetCommentInfoError
+		utils.Logger.Error(constant.ConvertForLog(constant.CommentNotExistError), err)
+		return comment, constant.CommentNotExistError
 	}
 	return comment, constant.SuccessCode
 }
 
 // GetCommentCount 获取评论列表
-func GetCommentCount(articleId int) (count, code int) {
+func GetCommentCount(articleId int) (count int64, code int) {
 	// TODO:status为1表示是正常用户，为2表示什么呢？
-	err := db.Where("article_id = ? and status = ?", articleId, 1).Take(&count).Error
+	err := db.Model(&Comment{}).Where("article_id = ? and status = ?", articleId, 1).Count(&count).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.GetCommentCountError), err)
 		return 0, constant.GetCommentCountError
@@ -51,21 +51,25 @@ func GetCommentCount(articleId int) (count, code int) {
 
 // GetCommentList 前端获取评论列表
 func GetCommentList(articleId, pageSize, pageNum int) (comments []Comment, total int64, code int) {
-	err := db.Where("article_id = ?", articleId).Count(&total).Error
+	err := db.Model(Comment{}).Where("article_id = ?", articleId).Count(&total).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.CountCommentError), err)
 		return comments, 0, constant.CountCommentError
 	}
 	// 1.Joins也可以通过“？”传参
 	// 2.当有多个Joins链式连接时，可以把前一个joins得到的结果作为与后一个Joins进行连接的数据集
-	err = db.Where("article_id = ?", articleId).Limit(pageSize).Offset(pageSize * (pageNum - 1)).Order(
-		"create_at desc",
+	// 可以直接在最后面使用Find，前面就可以省略Model(&Comment{}), 或者前面用db.Model(&Comment{})后面用Scan(&comment)
+	// 获取同一文章下的所有用户发表的评论
+	err = db.Model(&Comment{}).Where("article_id = ?", articleId).Limit(pageSize).Offset(
+		pageSize * (pageNum - 1),
+	).Order(
+		"created_at desc",
 	).Select(
 		"comment.id, comment.user_id, user.username, comment.article_id, " +
-			"article.title, content, status, create_at, delete_at",
+			"article.title, comment.content, comment.status, comment.created_at, comment.deleted_at",
 	).Joins(
 		"left join user on comment.user_id=user.id",
-	).Joins("left join article on comment.article_id=article.id").Find(&comments).Error
+	).Joins("left join article on comment.article_id=article.id").Scan(&comments).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.GetCommentListError), err)
 		return comments, 0, constant.GetCommentListError

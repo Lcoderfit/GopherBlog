@@ -60,14 +60,14 @@ func GetArticleList(c *gin.Context) {
 
 // GetArticleListByCategoryId 获取同一分类下的文章
 func GetArticleListByCategoryId(c *gin.Context) {
-	pageNum, _ := strconv.Atoi(c.Query("page_number"))
-	pageSize, _ := strconv.Atoi(c.Query("page_size"))
 	// 获取分类id
 	id, err := MustInt(c.Param, "id")
 	if err != nil {
 		fail(c, constant.ParamError)
 		return
 	}
+	pageNum, _ := strconv.Atoi(c.Query("page_number"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
 
 	if pageSize < 10 {
 		pageSize = 10
