@@ -77,6 +77,17 @@ model中定义模型时，gorm标签的gorm:"foreignKey:Cid"也是大小写不�
 
 26.page_number和page_size参数需要对err进行忽略，因为如果传入参数错误需要保证返回默认的数据列表页
 
+27.Joins查询几种示例
+正确：
+db.Model(&Comment{}).Where......Joins("left join user on .....").Scan(&comment)
+db.Model(&Comment{}).Where......Joins("left join user on .....").Find(&comment)
+db.Where......Joins("left join user on .....").Find(&comment)
+
+错误：
+db.Where......Joins("left join user on .....").Find(&comment)
+
+28.total返回的是所有的数据量，而不是单单一个页面的数据量
+
 错误：
 一.数据库连接失败
 1.config.ini文件中的字段需要与定义的结构体字段名字相同(大小写也必须一致)
@@ -120,6 +131,19 @@ Logger.SetOutput(ansicolor.NewAnsiColorWriter(os.Stdout))
 
 改成：db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&data).Error就没有问题
 
+十、err: unsupported data type: 0xc0003622d0: Table not set, please set it like: db.Model(&user) or db.Table("users")
+在查询时没有指明需要查的是哪个表
+错误：
+db.Where("article_id = ?", articleId).Count(&total).Error
+正确：
+db.Model(Comment{}).Where("article_id = ?", articleId).Count(&total).Error
+
+十一、err: sql: expected 11 destination arguments in Scan, not 1
+错误：用Take来获取int64类型的值，而Take只能接受Comment类型结构体指针
+db.Model(&Comment{}).Where("article_id = ? and status = ?", articleId, 1).Take(&count).Error
+正确:
+注意：count需要是int64类型
+db.Model(&Comment{}).Where("article_id = ? and status = ?", articleId, 1).Count(&count).Error
 
 
 

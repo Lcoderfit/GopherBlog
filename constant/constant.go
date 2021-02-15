@@ -87,6 +87,7 @@ const (
 	TakeDownCommentError    = 20608
 	ReduceCommentCountError = 20609
 	DeleteCommentError      = 20610
+	CommentNotExistError    = 20611
 )
 
 // CodeMsg 状态码信息字典,key和value分别对应状态码(int)和状态码信息(string)
@@ -167,6 +168,7 @@ var CodeMsg = map[int]string{
 	TakeDownCommentError:    "评论撤销失败",
 	ReduceCommentCountError: "评论数减少失败",
 	DeleteCommentError:      "评论删除错误",
+	CommentNotExistError:    "评论不存在",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息

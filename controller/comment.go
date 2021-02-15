@@ -15,66 +15,63 @@ func AddComment(c *gin.Context) {
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		return
 	}
 
 	msg, err := validator.Validate(data)
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.DataVerificationError), err)
 		failWithData(c, constant.DataVerificationError, msg)
+		return
 	}
 
 	code := model.CreateComment(&data)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	successWithData(c, data)
 }
 
 // GetCommentInfo 获取评论
 func GetCommentInfo(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
 	comments, code := model.GetCommentInfo(id)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	successWithData(c, comments)
 }
 
 // GetCommentCount 获取文章评论数量
 func GetCommentCount(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
 	count, code := model.GetCommentCount(id)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	successWithData(c, count)
 }
 
 // GetCommentList 前端获取评论列表
 func GetCommentList(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
-	pageSize, err := strconv.Atoi(c.Param("page_size"))
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-	}
-	pageNum, err := strconv.Atoi(c.Param("page_num"))
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-	}
+	pageNum, _ := strconv.Atoi(c.Query("page_number"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
 
 	if pageSize < 10 {
 		pageSize = 10
@@ -88,6 +85,7 @@ func GetCommentList(c *gin.Context) {
 	comments, total, code := model.GetCommentList(id, pageSize, pageNum)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	successWithData(c, gin.H{
 		"data":  comments,
