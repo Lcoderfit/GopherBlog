@@ -87,7 +87,7 @@ func InitRouter() {
 	{
 
 		// 验证token
-		router.POST("/admin/check_token")
+		router.POST("/admin/token-check", controller.CheckToken)
 		// 登录模块
 		router.POST("/login", controller.Login)
 		//router.POST("/login_front", controller.LoginFront)

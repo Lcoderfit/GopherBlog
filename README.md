@@ -88,6 +88,8 @@ db.Where......Joins("left join user on .....").Find(&comment)
 
 28.total返回的是所有的数据量，而不是单单一个页面的数据量
 
+29./admin/check_token修改成Rest接口 ----> /admin/token-check
+
 错误：
 一.数据库连接失败
 1.config.ini文件中的字段需要与定义的结构体字段名字相同(大小写也必须一致)

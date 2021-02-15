@@ -57,17 +57,20 @@ func CheckToken(c *gin.Context) {
 	var data UpToken
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		return
 	}
 	msg, err := validator.Validate(data)
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.DataVerificationError), err)
 		failWithData(c, constant.DataVerificationError, msg)
+		return
 	}
 
 	_, code, err := middleware.CheckToken(data.Token)
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(code), err)
 		fail(c, code)
+		return
 	}
 	success(c)
 }
