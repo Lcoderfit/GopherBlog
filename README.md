@@ -90,6 +90,9 @@ db.Where......Joins("left join user on .....").Find(&comment)
 
 29./admin/check_token修改成Rest接口 ----> /admin/token-check
 
+30.gorm.Model如果定义了DeleteAt字段，则具有软删除功能；即并不是真正的删除，而是将DeleteAt字段更新为删除语句执行的时间
+可以通过db.UnScoped().Where()查询软删除的数据，要永久删除可以使用db.UnScoped().Delete()
+
 错误：
 一.数据库连接失败
 1.config.ini文件中的字段需要与定义的结构体字段名字相同(大小写也必须一致)
@@ -147,5 +150,9 @@ db.Model(&Comment{}).Where("article_id = ? and status = ?", articleId, 1).Take(&
 注意：count需要是int64类型
 db.Model(&Comment{}).Where("article_id = ? and status = ?", articleId, 1).Count(&count).Error
 
+十二、获取用户列表，只需要获取用户的username, role和id三个字段，但是查出来的每一个用户都包含所有字段.
+可以通过设置users为[]map[string]interface{}类型，然后：
+db.Model(&User{}).Select("id, role, username")......Find(&users)
 
-
+十三、 err: invalid character '-' in numeric literal
+通常是客户端发起的请求参数格式与服务端不一致导致的，例如客户端发送表单类型而服务端接受json类型

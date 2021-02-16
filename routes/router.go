@@ -52,36 +52,34 @@ func InitRouter() {
 	{
 		// 用户模块
 		auth.GET("/admin/users", controller.GetUserList)
-		auth.PUT("/admin/change_password/:id", controller.ChangeUserPassword)
-		auth.PUT("/user/:id", controller.EditUserInfo)
-		auth.DELETE("/user/:id", controller.DeleteUser)
+		auth.PUT("/admin/reset-password/:id", controller.ChangeUserPassword)
+		auth.PUT("/users/:id", controller.EditUserInfo)
+		auth.DELETE("/users/:id", controller.DeleteUser)
 
 		// 个人信息模块
-		// TODO:更改为GetProfileInfo??
-		auth.GET("/admin/profile/:id", controller.GetProfileInfo)
-		auth.PUT("/profile/:id", controller.UpdateProfileInfo)
+		auth.GET("/admin/profiles/:id", controller.GetProfileInfo)
+		auth.PUT("/profiles/:id", controller.UpdateProfileInfo)
 
 		// 分类功能
 		auth.GET("/admin/categories", controller.GetCategoryList)
-		auth.POST("/category/add", controller.AddCategory)
-		auth.PUT("/category/:id", controller.EditCategoryInfo)
-		auth.DELETE("/category/:id", controller.DeleteCategory)
+		auth.POST("/categories", controller.AddCategory)
+		auth.PUT("/categories/:id", controller.EditCategoryInfo)
+		auth.DELETE("/categories/:id", controller.DeleteCategory)
 
 		// 文章模块
-		auth.GET("/admin/article/info/:id", controller.GetArticleInfo)
+		auth.GET("/admin/articles/:id", controller.GetArticleInfo)
 		auth.GET("/admin/articles", controller.GetArticleList)
-		auth.POST("/article/add", controller.AddArticle)
-		auth.PUT("/article/:id", controller.EditArticleInfo)
-		auth.DELETE("/article/:id", controller.DeleteArticle)
+		auth.POST("/article", controller.AddArticle)
+		auth.PUT("/articles/:id", controller.EditArticleInfo)
+		auth.DELETE("/articles/:id", controller.DeleteArticle)
 
 		// 评论模块
-		auth.GET("/admin/comment/list/:id", controller.GetCommentList)
-		auth.PUT("/check-comment/:id", controller.ApproveComment)
-		auth.PUT("/uncheck_comment/:id", controller.TakeDownComment)
-		auth.DELETE("/comment/:id", controller.DeleteComment)
+		auth.GET("/admin/comments/:id", controller.GetCommentList)
+		auth.PUT("/comments-check/:id", controller.ApproveComment)
+		auth.PUT("/comments-uncheck/:id", controller.TakeDownComment)
+		auth.DELETE("/comments/:id", controller.DeleteComment)
 	}
 
-	// TODO:需要重构成RESTful API
 	// 设置路由组，定义无需鉴权的接口
 	router := r.Group("/api/v1")
 	{

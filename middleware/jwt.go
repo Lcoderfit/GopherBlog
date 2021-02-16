@@ -92,14 +92,13 @@ func JwtToken() gin.HandlerFunc {
 				"code":  code,
 				"error": constant.CodeMsg[code],
 			})
-			// 直接返回，该中间件中c.Abort()后面的部分将不再执行，当在该中间件之后的其他中间件还是会执行
+			// 直接返回，c.Abort()后面的程序仍会执行（执行return），但是该中间件后面的所有请求处理函数均不再执行
 			c.Abort()
-			// TODO:为什么还要return
 			return
 		}
 		// 正常的规则为： bearer xxxxxxx
 		tokenInfo := strings.Split(tokenHeader, " ")
-		if len(tokenInfo) != 2 || tokenInfo[0] != "bearer" {
+		if len(tokenInfo) != 2 || strings.ToLower(tokenInfo[0]) != "bearer" {
 			code = constant.TokenMalformedError
 			c.JSON(http.StatusOK, gin.H{
 				"code":  code,

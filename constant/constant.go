@@ -32,7 +32,7 @@ const (
 	// 普通级别错误-01用户模块
 	UserAlreadyExistsError  = 20101
 	CreateUserError         = 20102
-	UserNotExistError       = 20103
+	UserNotExistsError      = 20103
 	GetUserListError        = 20104
 	UsernameNotExistsError  = 20105
 	UserPasswordError       = 20106
@@ -113,7 +113,7 @@ var CodeMsg = map[int]string{
 	// 模块级别错误-01用户模块
 	UserAlreadyExistsError:  "用户已存在",
 	CreateUserError:         "用户创建失败",
-	UserNotExistError:       "用户不存在",
+	UserNotExistsError:      "用户不存在",
 	GetUserListError:        "获取用户列表失败",
 	UsernameNotExistsError:  "用户名不存在",
 	UserPasswordError:       "密码错误",
