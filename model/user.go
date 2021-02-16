@@ -22,8 +22,14 @@ type User struct {
 	Role     int    `gorm:"type:int;default:2" json:"role" validate:"required,gte=2" label:"角色码"`
 }
 
-// IsUserExist 检查用户是否存在
-func IsUserExist(name string) bool {
+// 用户更新用户
+type UserEdition struct {
+	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=12" label:"用户名"`
+	Role     int    `gorm:"type:int;default:2" json:"role" validate:"required" label:"角色码"`
+}
+
+// IsUserExistsByName 检查用户是否存在
+func IsUserExistsByName(name string) bool {
 	var user User
 	// 1.字段名用数据库字段名称或者模型中的字段名都可以
 	//
@@ -87,21 +93,23 @@ func GetUserInfoById(id int) (User, int) {
 	// 如果没找到会返回record not found错误
 	err := db.Where("id = ?", id).Take(&user).Error
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.UserNotExistError), err)
-		return user, constant.UserNotExistError
+		utils.Logger.Error(constant.ConvertForLog(constant.UserNotExistsError), err)
+		return user, constant.UserNotExistsError
 	}
 	return user, constant.SuccessCode
 }
 
 // GetUserList 获取用户列表
 // 可能存储非常多的数据，total需要用长整型
-func GetUserList(pageSize, pageNum int, username string) (users []User, total int64, code int) {
+func GetUserList(pageSize, pageNum int, username string) (users []map[string]interface{}, total int64, code int) {
 	if username != "" {
-		err = db.Select("id, username, role").Where(
+		err = db.Model(&User{}).Select("id, username, role").Where(
 			"username like ?", "%"+username+"%",
 		).Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
 	} else {
-		err = db.Select("id, username, role").Limit(pageSize).Offset((pageNum - 1) * pageSize).Find(&users).Error
+		err = db.Model(&User{}).Select("id, username, role").Limit(pageSize).Offset(
+			(pageNum - 1) * pageSize,
+		).Find(&users).Error
 	}
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.GetUserListError), err)
@@ -150,13 +158,13 @@ func ChangeUserPassword(id int, data *User) int {
 }
 
 // EditUserInfo 编辑用户信息
-func EditUserInfo(data *User) int {
+func EditUserInfo(id int, data *UserEdition) int {
 	// TODO：传入data和传入&data的区别？？
 	var maps = make(map[string]interface{})
 	maps["username"] = data.Username
 	maps["role"] = data.Role
 	// 假设data中的ID为111， 下面语句相当于update user set username=xxx and role=yyy where id='111'
-	err := db.Model(&data).Updates(maps)
+	err := db.Model(&User{}).Where("id = ?", id).Updates(maps).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.EditUserInfoError), err)
 		return constant.EditUserInfoError
@@ -174,4 +182,15 @@ func DeleteUser(id int) int {
 		return constant.DeleteUserError
 	}
 	return constant.SuccessCode
+}
+
+// IsUserExistById 通过id判断用户是否存在
+func IsUserExistsById(id int) bool {
+	var user User
+	err := db.Where("id = ?", id).Take(&user).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.UserNotExistsError), err)
+		return false
+	}
+	return true
 }
