@@ -93,6 +93,8 @@ db.Where......Joins("left join user on .....").Find(&comment)
 30.gorm.Model如果定义了DeleteAt字段，则具有软删除功能；即并不是真正的删除，而是将DeleteAt字段更新为删除语句执行的时间
 可以通过db.UnScoped().Where()查询软删除的数据，要永久删除可以使用db.UnScoped().Delete()
 
+31.加入pv，uv等redis统计功能；Nginx负载均衡
+
 错误：
 一.数据库连接失败
 1.config.ini文件中的字段需要与定义的结构体字段名字相同(大小写也必须一致)
