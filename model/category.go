@@ -7,22 +7,30 @@ import (
 
 type Category struct {
 	ID   int    `gorm:"primaryKey;autoIncrement" json:"id"`
-	Name string `gorm:"type:varchar(20);not null" json:"name"`
+	Name string `gorm:"type:varchar(20);not null" validate:"required" json:"name"`
 }
 
-// IsCategoryExist 判断文章分类是否存在
-func IsCategoryExist(name string) (int, bool) {
+// IsCategoryExistsByName 根据名称判断文章分类是否存在
+func IsCategoryExistsByName(name string) (int, bool) {
 	var data Category
-	err := db.Where("name = ?", name).Take(&data).Error
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.DatabaseAccessError), err)
-		return constant.DatabaseAccessError, true
-	}
+	// 如果不存在才会返回err(gorm.ErrRecordNotFound), 判断是否存在可以忽略err
+	db.Where("name = ?", name).Take(&data)
 	if data.ID > 0 {
-		utils.Logger.Error(constant.ConvertForLog(constant.CategoryExistError), err)
-		return constant.CategoryExistError, true
+		utils.Logger.Error(constant.ConvertForLog(constant.CategoryExistsError), err)
+		return constant.CategoryExistsError, true
 	}
 	return constant.SuccessCode, false
+}
+
+// IsCategoryExistsById 根据ID判断文章分类是否存在
+func IsCategoryExistsById(id int) (int, bool) {
+	var data Category
+	err := db.Where("id = ?", id).Take(&data).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.CategoryNotExistsError))
+		return constant.CategoryNotExistsError, false
+	}
+	return constant.SuccessCode, true
 }
 
 // CreateCategory 创建新分类
@@ -40,8 +48,8 @@ func GetCategoryInfo(id int) (Category, int) {
 	var data Category
 	err := db.Where("id = ?", id).Take(&data).Error
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.CategoryNotExistError), err)
-		return data, constant.CategoryNotExistError
+		utils.Logger.Error(constant.ConvertForLog(constant.CategoryNotExistsError), err)
+		return data, constant.CategoryNotExistsError
 	}
 	return data, constant.SuccessCode
 }
@@ -58,10 +66,8 @@ func GetCategoryList(pageSize, pageNum int) (data []Category, code int) {
 
 // EditCategoryInfo 编辑分类信息
 func EditCategoryInfo(id int, data *Category) int {
-	maps := make(map[string]interface{})
-	maps["name"] = data.Name
 	// update category set name=xxx where id=yyy
-	err := db.Model(&Category{}).Select("id = ?", id).Updates(maps).Error
+	err := db.Model(&Category{}).Where("id = ?", id).Updates(data).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.EditCategoryInfoError), err)
 		return constant.EditCategoryInfoError

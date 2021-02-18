@@ -99,6 +99,25 @@ db.Where......Joins("left join user on .....").Find(&comment)
 
 33.用户更新接口更新用户信息时没有对用户名进行判重
 34.如果忘记密码怎么办，现有的修改密码接口需要进行JWT校验，万一JWT失效了呢
+35.Post和get list不需要加id参数，delete/put/get single一般都需要加上id
+36.判断是否存在：
+func IsUserExists(id int) {
+    var data model.User
+    db.Where("id = ?", id).Take(&data)
+    if data.ID > 0 {
+        return code1, true
+    }
+    return code2, false
+}
+
+func IsUserExists(id int) {
+    var data model.User
+    err := db.Where("id = ?", id).Take(&data).Error
+    if err != nil {
+        return code1, false
+    }
+    return code2, true
+}
 
 错误：
 一.数据库连接失败
@@ -188,3 +207,10 @@ TODO:可以考虑改成Updates(模型实例)
 在设置json tag的情况下，前端传入的字段值需要与json tag相一致才能接收,数据库中的字段也需要与json tag一致(无论前端还是数据库,与json tag的一致性
 比较均是大小写不敏感的)
 
+
+十七、err: WHERE conditions required
+错误：
+err := db.Model(&Category{}).Select("id = ?", id).Updates(data).Error
+
+正确：
+err := db.Model(&Category{}).Where("id = ?", id).Updates(data).Error

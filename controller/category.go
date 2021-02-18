@@ -7,6 +7,7 @@ import (
 	"GopherBlog/utils/validator"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"strings"
 )
 
 // AddCategory 添加文章分类
@@ -14,23 +15,30 @@ func AddCategory(c *gin.Context) {
 	var data model.Category
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+		return
 	}
+	// TODO:优化逻辑
+	// 防止输入标签为空格
+	data.Name = strings.TrimSpace(data.Name)
 
 	msg, err := validator.Validate(data)
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.DataVerificationError), err)
 		failWithData(c, constant.DataVerificationError, msg)
+		return
 	}
 
 	// 检查分类名称是否已经存在
-	code, ok := model.IsCategoryExist(data.Name)
+	code, ok := model.IsCategoryExistsByName(data.Name)
 	if ok {
 		fail(c, code)
+		return
 	}
 
 	code = model.CreateCategory(&data)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	// TODO:为什么需要返回data
 	successWithData(c, data)
@@ -77,45 +85,57 @@ func GetCategoryList(c *gin.Context) {
 
 // EditCategoryInfo JWT鉴权接口:编辑分类
 func EditCategoryInfo(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
 	var data model.Category
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
+	}
+	// TODO:优化
+	data.Name = strings.TrimSpace(data.Name)
+	msg, err := validator.Validate(data)
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.DataVerificationError), msg)
+		failWithData(c, constant.DataVerificationError, msg)
+		return
 	}
 
-	code, ok := model.IsCategoryExist(data.Name)
-	if !ok {
+	code, ok := model.IsCategoryExistsByName(data.Name)
+	if ok {
 		fail(c, code)
+		return
 	}
 	code = model.EditCategoryInfo(id, &data)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	success(c)
 }
 
 // DeleteCategory JWT鉴权接口:删除分类
 func DeleteCategory(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
-	//var data model.Category
-	//if err := c.ShouldBindJSON(&data); err != nil {
-	//	utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-	//	fail(c, constant.ParamError)
-	//}
 
-	// TODO:为什么删除接口不需要判断分类是否存在
-	code := model.DeleteCategory(id)
+	// 如果分类不存在，则无需删除
+	code, ok := model.IsCategoryExistsById(id)
+	if !ok {
+		fail(c, code)
+		return
+	}
+	code = model.DeleteCategory(id)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	success(c)
 }
