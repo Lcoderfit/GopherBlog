@@ -3,6 +3,7 @@ package model
 import (
 	"GopherBlog/constant"
 	"GopherBlog/utils"
+	"fmt"
 )
 
 // Profile 个人信息
@@ -10,8 +11,8 @@ type Profile struct {
 	ID     int    `gorm:"primaryKey" json:"id"`
 	Name   string `gorm:"type:varchar(20)" json:"name"`
 	Desc   string `gorm:"type:varchar(200)" json:"desc"`
-	QqChat string `gorm:"type:varchar(200)" json:"qq_chat"`
-	WeChat string `gorm:"type:varchar(200)" json:"wechat"`
+	Qqchat string `gorm:"type:varchar(200)" json:"qqchat"`
+	Wechat string `gorm:"type:varchar(200)" json:"wechat"`
 	Weibo  string `gorm:"type:varchar(200)" json:"weibo"`
 	Bili   string `gorm:"type:varchar(200)" json:"bili"`
 	Email  string `gorm:"type:varchar(200)" json:"email"`
@@ -35,9 +36,12 @@ func GetProfileInfo(id int) (Profile, int) {
 
 // UpdateProfileInfo 更新个人信息
 func UpdateProfileInfo(id int, data *Profile) int {
+	// Updates函数只会更新非零值的字段，要想零值的字段也更新，需要使用map[string]interface{}
+	// TODO: 传入零值不更新
+	utils.Logger.Info(fmt.Sprintf("%+v", *data))
 	err := db.Model(&Profile{}).Where("id = ?", id).Updates(&data).Error
 	if err != nil {
-		// TODO：是否可以简化多出出现err code的情况
+		// TODO：是否可以简化多处出现err code的情况
 		utils.Logger.Error(constant.ConvertForLog(constant.UpdateProfileInfoError), err)
 		return constant.UpdateProfileInfoError
 	}
