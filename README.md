@@ -95,6 +95,8 @@ db.Where......Joins("left join user on .....").Find(&comment)
 
 31.加入pv，uv等redis统计功能；Nginx负载均衡
 
+32.自建issue
+
 错误：
 一.数据库连接失败
 1.config.ini文件中的字段需要与定义的结构体字段名字相同(大小写也必须一致)
@@ -158,3 +160,7 @@ db.Model(&User{}).Select("id, role, username")......Find(&users)
 
 十三、 err: invalid character '-' in numeric literal
 通常是客户端发起的请求参数格式与服务端不一致导致的，例如客户端发送表单类型而服务端接受json类型
+
+十四、更新用户时，不加validator验证输入非法内容会导致问题，加上validator验证又必须所有字段都得传入
+
+除非必要字段，需要更新的字段都需要传入?????

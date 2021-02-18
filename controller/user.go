@@ -130,6 +130,7 @@ func EditUserInfo(c *gin.Context) {
 	}
 	// 需要编辑的信息通过json格式参数传入
 	var data model.UserEdition
+	//var data map[string]interface{}
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)

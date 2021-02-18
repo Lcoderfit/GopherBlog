@@ -22,10 +22,10 @@ type User struct {
 	Role     int    `gorm:"type:int;default:2" json:"role" validate:"required,gte=2" label:"角色码"`
 }
 
-// 用户更新用户
+// 用于更新用户信息
 type UserEdition struct {
-	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=12" label:"用户名"`
-	Role     int    `gorm:"type:int;default:2" json:"role" validate:"required" label:"角色码"`
+	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"min=4,max=12" label:"用户名"`
+	Role     int    `gorm:"type:int;default:2" json:"role" label:"角色码"`
 }
 
 // IsUserExistsByName 检查用户是否存在
