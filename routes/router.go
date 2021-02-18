@@ -69,7 +69,7 @@ func InitRouter() {
 		// 文章模块
 		auth.GET("/admin/articles/:id", controller.GetArticleInfo)
 		auth.GET("/admin/articles", controller.GetArticleList)
-		auth.POST("/article", controller.AddArticle)
+		auth.POST("/articles", controller.AddArticle)
 		auth.PUT("/articles/:id", controller.EditArticleInfo)
 		auth.DELETE("/articles/:id", controller.DeleteArticle)
 

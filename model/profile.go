@@ -3,7 +3,6 @@ package model
 import (
 	"GopherBlog/constant"
 	"GopherBlog/utils"
-	"fmt"
 )
 
 // Profile 个人信息
@@ -38,7 +37,6 @@ func GetProfileInfo(id int) (Profile, int) {
 func UpdateProfileInfo(id int, data *Profile) int {
 	// Updates函数只会更新非零值的字段，要想零值的字段也更新，需要使用map[string]interface{}
 	// TODO: 传入零值不更新
-	utils.Logger.Info(fmt.Sprintf("%+v", *data))
 	err := db.Model(&Profile{}).Where("id = ?", id).Updates(&data).Error
 	if err != nil {
 		// TODO：是否可以简化多处出现err code的情况

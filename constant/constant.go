@@ -60,12 +60,12 @@ const (
 	UpdateProfileInfoError = 20302
 
 	// 普通级别错误-04文章分类模块
-	CategoryExistError    = 20401
-	CreateCategoryError   = 20402
-	GetCategoryInfoError  = 20403
-	CategoryNotExistError = 20404
-	EditCategoryInfoError = 20405
-	DeleteCategoryError   = 20406
+	CategoryExistsError    = 20401
+	CreateCategoryError    = 20402
+	GetCategoryInfoError   = 20403
+	CategoryNotExistsError = 20404
+	EditCategoryInfoError  = 20405
+	DeleteCategoryError    = 20406
 
 	// 普通级别错误-05文章模块
 	ArticleNotExistError            = 20501
@@ -142,13 +142,13 @@ var CodeMsg = map[int]string{
 	UpdateProfileInfoError: "个人信息更新错误",
 
 	// 普通级别错误-04文章分类模块
-	CategoryExistError:    "分类已存在",
-	CreateCategoryError:   "新增分类失败",
-	GetCategoryInfoError:  "分类获取失败",
-	CategoryNotExistError: "分类不存在",
-	EditCategoryInfoError: "文章分类编辑错误",
-	CreateArticleError:    "文章创建失败",
-	DeleteCategoryError:   "文章分类删除失败",
+	CategoryExistsError:    "分类已存在",
+	CreateCategoryError:    "新增分类失败",
+	GetCategoryInfoError:   "分类获取失败",
+	CategoryNotExistsError: "分类不存在",
+	EditCategoryInfoError:  "文章分类编辑错误",
+	CreateArticleError:     "文章创建失败",
+	DeleteCategoryError:    "文章分类删除失败",
 
 	// 普通级别错误-05文章模块
 	ArticleNotExistError:            "文章信息获取失败",
