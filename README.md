@@ -97,6 +97,9 @@ db.Where......Joins("left join user on .....").Find(&comment)
 
 32.自建issue
 
+33.用户更新接口更新用户信息时没有对用户名进行判重
+34.如果忘记密码怎么办，现有的修改密码接口需要进行JWT校验，万一JWT失效了呢
+
 错误：
 一.数据库连接失败
 1.config.ini文件中的字段需要与定义的结构体字段名字相同(大小写也必须一致)
@@ -164,3 +167,24 @@ db.Model(&User{}).Select("id, role, username")......Find(&users)
 十四、更新用户时，不加validator验证输入非法内容会导致问题，加上validator验证又必须所有字段都得传入
 
 除非必要字段，需要更新的字段都需要传入?????
+
+Update/Updates函数只会更新非零的字段值，如果需要更新零值字段，应该使用map
+
+TODO:可以考虑改成Updates(模型实例)
+
+十五、更新个人信息接口传入字段参数为零值不会更新
+
+十六、在不设置json tag的情况下，如果model中的struct有一个字段为AxxBxx这种形式，而在数据库中对应的字段是axxbxx,则前端无论传什么字段到后端都无法修改该字段值；
+前端传入axxbxx/Axxbxx/AxxBxx均会报：Unknown column 'axx_bxx' in 'field list';因为struct中的AxxBxx字段对应数据库中字段
+格式为axx_bxx,而数据库中只有axxbxx, 所以会报该字段不存在
+前端传入qq_chat不会报错，但是也不会对AxxBxx的值产生影响，
+
+解决：
+1.修改model中的字段为Axxbxx
+2.修改数据库中字段为axx_bxx
+
+注意：如果model中字段格式为AxxBxx，前端需要传入axxbxx/Axxbxx/axxBxx/AxxBxx/这种形式model才能接受
+
+在设置json tag的情况下，前端传入的字段值需要与json tag相一致才能接收,数据库中的字段也需要与json tag一致(无论前端还是数据库,与json tag的一致性
+比较均是大小写不敏感的)
+

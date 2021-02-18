@@ -30,19 +30,20 @@ const (
 	DatabaseInstanceCreateError = 10012
 
 	// 普通级别错误-01用户模块
-	UserAlreadyExistsError  = 20101
-	CreateUserError         = 20102
-	UserNotExistsError      = 20103
-	GetUserListError        = 20104
-	UsernameNotExistsError  = 20105
-	UserPasswordError       = 20106
-	EncryptPasswordError    = 20107
-	SavePasswordError       = 20108
-	UpdatePasswordError     = 20109
-	UserRoleError           = 20110
-	ChangeUserPasswordError = 20111
-	EditUserInfoError       = 20112
-	DeleteUserError         = 20113
+	UserAlreadyExistsError     = 20101
+	CreateUserError            = 20102
+	UserNotExistsError         = 20103
+	GetUserListError           = 20104
+	UsernameNotExistsError     = 20105
+	UserPasswordError          = 20106
+	EncryptPasswordError       = 20107
+	SavePasswordError          = 20108
+	UpdatePasswordError        = 20109
+	UserRoleError              = 20110
+	ChangeUserPasswordError    = 20111
+	EditUserInfoError          = 20112
+	DeleteUserError            = 20113
+	UsernameAlreadyExistsError = 20114
 
 	// 普通级别错误-02中间件模块
 	SetTokenError         = 20201
@@ -111,19 +112,20 @@ var CodeMsg = map[int]string{
 	DatabaseInstanceCreateError: "创建数据库实例失败",
 
 	// 模块级别错误-01用户模块
-	UserAlreadyExistsError:  "用户已存在",
-	CreateUserError:         "用户创建失败",
-	UserNotExistsError:      "用户不存在",
-	GetUserListError:        "获取用户列表失败",
-	UsernameNotExistsError:  "用户名不存在",
-	UserPasswordError:       "密码错误",
-	EncryptPasswordError:    "密码加密错误",
-	SavePasswordError:       "密码保存失败",
-	UpdatePasswordError:     "密码更新失败",
-	UserRoleError:           "用户角色码错误",
-	ChangeUserPasswordError: "密码修改失败",
-	EditUserInfoError:       "用户信息编辑失败",
-	DeleteUserError:         "用户删除失败",
+	UserAlreadyExistsError:     "用户已存在",
+	CreateUserError:            "用户创建失败",
+	UserNotExistsError:         "用户不存在",
+	GetUserListError:           "获取用户列表失败",
+	UsernameNotExistsError:     "用户名不存在",
+	UserPasswordError:          "密码错误",
+	EncryptPasswordError:       "密码加密错误",
+	SavePasswordError:          "密码保存失败",
+	UpdatePasswordError:        "密码更新失败",
+	UserRoleError:              "用户角色码错误",
+	ChangeUserPasswordError:    "密码修改失败",
+	EditUserInfoError:          "用户信息编辑失败",
+	DeleteUserError:            "用户删除失败",
+	UsernameAlreadyExistsError: "用户名已存在",
 
 	// 普通级别错误-02中间件模块
 	SetTokenError:         "token设置失败",

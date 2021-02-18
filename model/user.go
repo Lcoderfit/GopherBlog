@@ -159,12 +159,20 @@ func ChangeUserPassword(id int, data *User) int {
 
 // EditUserInfo 编辑用户信息
 func EditUserInfo(id int, data *UserEdition) int {
+	// 判断用户名是否已存在
+	var user User
+	err := db.Where("username = ?", data.Username).Take(&user).Error
+	if err == nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.UsernameAlreadyExistsError), err)
+		return constant.UsernameAlreadyExistsError
+	}
+
 	// TODO：传入data和传入&data的区别？？
 	var maps = make(map[string]interface{})
 	maps["username"] = data.Username
 	maps["role"] = data.Role
 	// 假设data中的ID为111， 下面语句相当于update user set username=xxx and role=yyy where id='111'
-	err := db.Model(&User{}).Where("id = ?", id).Updates(maps).Error
+	err = db.Model(&User{}).Where("id = ?", id).Updates(maps).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.EditUserInfoError), err)
 		return constant.EditUserInfoError
