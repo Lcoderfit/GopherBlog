@@ -98,52 +98,52 @@ func AddArticle(c *gin.Context) {
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
-
-	// TODO:不用判断文章是否已经存在吗？
+	// TODO:参数校验，定义新模型：ArticleAddition
+	// TODO:一开始创建如果不添加分类，后期如何为文章添加分类，通过更新文章接口？？
 	code := model.CreateArticle(&data)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	successWithData(c, data)
 }
 
 // EditArticleInfo JWT鉴权接口:编辑文章
 func EditArticleInfo(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
 	var data model.Article
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
-
+	// TODO:是否要加参数校验
 	code := model.EditArticleInfo(id, &data)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	success(c)
 }
 
 // DeleteArticle JWT鉴权接口:删除文章
 func DeleteArticle(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
-	}
-	var data model.Article
-	if err := c.ShouldBindJSON(&data); err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
+		return
 	}
 
 	code := model.DeleteArticle(id)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	success(c)
 }
