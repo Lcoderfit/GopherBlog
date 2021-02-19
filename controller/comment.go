@@ -63,8 +63,8 @@ func GetCommentCount(c *gin.Context) {
 	successWithData(c, count)
 }
 
-// GetCommentList 前端获取评论列表
-func GetCommentList(c *gin.Context) {
+// GetCommentListByArticleId 获取同一文章下的所有评论
+func GetCommentListByArticleId(c *gin.Context) {
 	id, err := MustInt(c.Param, "id")
 	if err != nil {
 		fail(c, constant.ParamError)
@@ -82,72 +82,103 @@ func GetCommentList(c *gin.Context) {
 		pageNum = 1
 	}
 
-	comments, total, code := model.GetCommentList(id, pageSize, pageNum)
+	comments, total, code := model.GetCommentListByArticleId(id, pageSize, pageNum)
 	if code != constant.SuccessCode {
 		fail(c, code)
 		return
 	}
 	successWithData(c, gin.H{
-		"data":  comments,
-		"total": total,
+		"comment_list": comments,
+		"total":        total,
 	})
 }
 
-// ApproveComment JWT鉴权接口:审核评论
-func ApproveComment(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+// GetCommentList JWT-获取评论列表
+func GetCommentList(c *gin.Context) {
+	pageNum, _ := strconv.Atoi(c.Query("page_number"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
+
+	if pageNum <= 0 {
+		pageNum = 1
+	}
+	if pageSize < 10 {
+		pageSize = 10
+	} else if pageSize > 100 {
+		pageSize = 100
+	}
+
+	comments, total, code := model.GetCommentList(pageNum, pageSize)
+	if code != constant.SuccessCode {
+		fail(c, code)
+		return
+	}
+	successWithData(c, gin.H{
+		"comment_list": comments,
+		"total":        total,
+	})
+}
+
+// UpdateCommentStatus JWT鉴权接口:审核通过评论
+func UpdateCommentStatus(c *gin.Context) {
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
 	var data model.Comment
 	if err := c.ShouldBindJSON(&data); err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
+		return
 	}
-	code := model.ApproveComment(id, &data)
-	if code != constant.SuccessCode {
-		fail(c, code)
-	}
-	success(c)
-}
-
-// TakeDownComment JWT鉴权接口:撤销评论
-func TakeDownComment(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	msg, err := validator.Validate(data)
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
+		utils.Logger.Error(constant.ConvertForLog(constant.DataVerificationError), err)
+		failWithData(c, constant.DataVerificationError, msg)
+		return
 	}
-	var data model.Comment
-	if err := c.ShouldBindJSON(&data); err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-	}
-
-	code := model.TakeDownComment(id, &data)
+	code := model.UpdateCommentStatus(id, &data)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	success(c)
 }
+
+//// TakeDownComment JWT鉴权接口:撤销评论
+//func TakeDownComment(c *gin.Context) {
+//	id, err := MustInt(c.Param, "id")
+//	if err != nil {
+//		fail(c, constant.ParamError)
+//		return
+//	}
+//	var data model.Comment
+//	if err := c.ShouldBindJSON(&data); err != nil {
+//		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
+//		fail(c, constant.ParamError)
+//		return
+//	}
+//
+//	code := model.TakeDownComment(id, &data)
+//	if code != constant.SuccessCode {
+//		fail(c, code)
+//		return
+//	}
+//	success(c)
+//}
 
 // DeleteComment JWT鉴权接口:删除评论
 func DeleteComment(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := MustInt(c.Param, "id")
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
 		fail(c, constant.ParamError)
-	}
-	var data model.Comment
-	if err := c.ShouldBindJSON(&data); err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
+		return
 	}
 
 	code := model.DeleteComment(id)
 	if code != constant.SuccessCode {
 		fail(c, code)
+		return
 	}
 	success(c)
 }

@@ -78,18 +78,20 @@ const (
 	DeleteArticleError              = 20508
 
 	// 普通级别错误-06评论模块
-	CreateCommentError      = 20601
-	GetCommentInfoError     = 20602
-	GetCommentCountError    = 20603
-	GetCommentListError     = 20604
-	CountCommentError       = 20605
-	ApproveCommentError     = 20606
-	AddCommentCountError    = 20607
-	TakeDownCommentError    = 20608
-	ReduceCommentCountError = 20609
-	DeleteCommentError      = 20610
-	CommentNotExistError    = 20611
-	UpdateCommentCountError = 20612
+	CreateCommentError             = 20601
+	GetCommentInfoError            = 20602
+	GetCommentCountError           = 20603
+	GetCommentListByArticleIdError = 20604
+	GetCommentListError            = 20605
+	CountCommentError              = 20606
+	UpdateCommentStatusError       = 20607
+	AddCommentCountError           = 20608
+	TakeDownCommentError           = 20609
+	ReduceCommentCountError        = 20610
+	DeleteCommentError             = 20611
+	CommentNotExistError           = 20612
+	UpdateCommentCountError        = 20613
+	CommentStatusRepeatSet         = 20614
 )
 
 // CodeMsg 状态码信息字典,key和value分别对应状态码(int)和状态码信息(string)
@@ -161,18 +163,20 @@ var CodeMsg = map[int]string{
 	DeleteArticleError:              "文章删除失败",
 
 	// 普通级别错误-06评论模块
-	CreateCommentError:      "评论创建失败",
-	GetCommentInfoError:     "评论获取失败",
-	GetCommentCountError:    "评论数获取失败",
-	GetCommentListError:     "评论列表获取失败",
-	CountCommentError:       "评论数获取失败",
-	ApproveCommentError:     "评论通过失败",
-	AddCommentCountError:    "评论数增加失败",
-	TakeDownCommentError:    "评论撤销失败",
-	ReduceCommentCountError: "评论数减少失败",
-	DeleteCommentError:      "评论删除错误",
-	CommentNotExistError:    "评论不存在",
-	UpdateCommentCountError: "评论数更新失败",
+	CreateCommentError:             "评论创建失败",
+	GetCommentInfoError:            "评论获取失败",
+	GetCommentCountError:           "评论数获取失败",
+	GetCommentListError:            "评论列表获取失败",
+	GetCommentListByArticleIdError: "同一文章下的评论列表获取失败",
+	CountCommentError:              "评论数获取失败",
+	UpdateCommentStatusError:       "评论状态更新失败",
+	AddCommentCountError:           "评论数增加失败",
+	TakeDownCommentError:           "评论撤销失败",
+	ReduceCommentCountError:        "评论数减少失败",
+	DeleteCommentError:             "评论删除错误",
+	CommentNotExistError:           "评论不存在",
+	UpdateCommentCountError:        "评论数更新失败",
+	CommentStatusRepeatSet:         "评论状态重复设置",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息

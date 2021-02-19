@@ -172,14 +172,3 @@ func DeleteUser(c *gin.Context) {
 	}
 	success(c)
 }
-
-// 测试接口
-func Test(c *gin.Context) {
-	var data model.User
-	if err := c.ShouldBindJSON(&data); err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ParamError), err)
-		fail(c, constant.ParamError)
-		return
-	}
-	successWithData(c, data)
-}

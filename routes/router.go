@@ -74,9 +74,10 @@ func InitRouter() {
 		auth.DELETE("/articles/:id", controller.DeleteArticle)
 
 		// 评论模块
-		auth.GET("/admin/comments/:id", controller.GetCommentList)
-		auth.PUT("/comments-check/:id", controller.ApproveComment)
-		auth.PUT("/comments-uncheck/:id", controller.TakeDownComment)
+		auth.GET("/admin/comments", controller.GetCommentList)
+		auth.GET("/admin/articles/:id/comments", controller.GetCommentListByArticleId)
+		auth.PUT("/comments-status/:id", controller.UpdateCommentStatus)
+		//auth.PUT("/comments-uncheck/:id", controller.TakeDownComment)
 		auth.DELETE("/comments/:id", controller.DeleteComment)
 	}
 
@@ -111,9 +112,7 @@ func InitRouter() {
 		router.POST("/comments", controller.AddComment)
 		router.GET("/comments/:id", controller.GetCommentInfo)
 		router.GET("/articles/:id/comments-count", controller.GetCommentCount)
-		router.GET("/articles/:id/comments", controller.GetCommentList)
-
-		router.POST("/test", controller.Test)
+		router.GET("/articles/:id/comments", controller.GetCommentListByArticleId)
 	}
 
 	// 运行项目
