@@ -89,6 +89,7 @@ const (
 	ReduceCommentCountError = 20609
 	DeleteCommentError      = 20610
 	CommentNotExistError    = 20611
+	UpdateCommentCountError = 20612
 )
 
 // CodeMsg 状态码信息字典,key和value分别对应状态码(int)和状态码信息(string)
@@ -171,6 +172,7 @@ var CodeMsg = map[int]string{
 	ReduceCommentCountError: "评论数减少失败",
 	DeleteCommentError:      "评论删除错误",
 	CommentNotExistError:    "评论不存在",
+	UpdateCommentCountError: "评论数更新失败",
 }
 
 // 将code转换为末尾带有“：”的message, 用于打印log信息

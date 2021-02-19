@@ -119,6 +119,9 @@ func IsUserExists(id int) {
     return code2, true
 }
 
+37.新建文章时，不用判断文章是否已经存在吗？
+不需要，因为文章内容可以重复，但是如果前端传入相同的ID呢？？
+
 错误：
 一.数据库连接失败
 1.config.ini文件中的字段需要与定义的结构体字段名字相同(大小写也必须一致)
@@ -214,3 +217,10 @@ err := db.Model(&Category{}).Select("id = ?", id).Updates(data).Error
 
 正确：
 err := db.Model(&Category{}).Where("id = ?", id).Updates(data).Error
+
+十八、添加评论之后，没有自动更新文章的评论数
+在新建评论时，前端会传入评论的文章ID，更具文章ID获取对应的文章实例然后更新CommentCount即可
+
+十九、前端如果传入的用户ID和Username不一致，则数据库中数据就会错乱
+
+二十、添加事务，如果两个sql操作，其中一个成功，另一个不成功，则会导致数据不一致

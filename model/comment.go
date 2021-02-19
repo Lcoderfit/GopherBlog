@@ -8,6 +8,7 @@ import (
 
 // Comment gorm.Model中设置了ID为主键， 如果没有使用这个，需要显示设置一个字段为"primaryKey"
 // TODO:需要设置成belongs to或者has many关系
+// TODO：comment has many comment
 type Comment struct {
 	gorm.Model
 	UserId    int    `json:"user_id"`
@@ -18,12 +19,23 @@ type Comment struct {
 	Status    int8   `gorm:"tinyint;not null;default:2" json:"status"`  // 状态默认为2
 }
 
-// CreateComment 新增评论, 评论内容可以重复，需要不需要像User的model一样判断是否存在
+// CreateComment 新增评论
+// TODO:前端如果传入的用户ID和Username不一致，则数据库中数据就会错乱
+// TODO:添加事务，如果两个sql操作，其中一个成功，另一个不成功，则会导致数据不一致
 func CreateComment(data *Comment) int {
 	err := db.Create(data).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.CreateCommentError), err)
 		return constant.CreateCommentError
+	}
+
+	// 更新文章评论数
+	err = db.Model(&Article{}).Where("id = ?", data.ArticleId).UpdateColumn(
+		"comment_count", gorm.Expr("comment_count + ?", 1),
+	).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.UpdateCommentCountError), err)
+		return constant.UpdateCommentCountError
 	}
 	return constant.SuccessCode
 }
