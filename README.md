@@ -122,6 +122,12 @@ func IsUserExists(id int) {
 37.新建文章时，不用判断文章是否已经存在吗？
 不需要，因为文章内容可以重复，但是如果前端传入相同的ID呢？？
 
+38.计算一个模型列表总数：db.Model(comments).Count(&total)
+相当于：select count(*) from comment where id in (1, 2, 3....)
+
+39.oneof标签： oneof: 1 2 3
+Status    int8   `gorm:"tinyint;not null;default:2" validate:"oneof=0 1 2" json:"status"`
+
 错误：
 一.数据库连接失败
 1.config.ini文件中的字段需要与定义的结构体字段名字相同(大小写也必须一致)
@@ -218,9 +224,27 @@ err := db.Model(&Category{}).Select("id = ?", id).Updates(data).Error
 正确：
 err := db.Model(&Category{}).Where("id = ?", id).Updates(data).Error
 
-十八、添加评论之后，没有自动更新文章的评论数
+十八、添加评论之后，没有自动更新文章的评论数？？？？？ 注意：增加评论数的逻辑是否定义在文章审核通过的接口中
 在新建评论时，前端会传入评论的文章ID，更具文章ID获取对应的文章实例然后更新CommentCount即可
 
-十九、前端如果传入的用户ID和Username不一致，则数据库中数据就会错乱
+十九、前端如果传入的用户ID和Username不一致，则数据库中数据就会错乱？？？？
 
-二十、添加事务，如果两个sql操作，其中一个成功，另一个不成功，则会导致数据不一致
+二十、添加事务，如果两个sql操作，其中一个成功，另一个不成功，则会导致数据不一致？？？？？
+
+二十一、invalid value
+可能的错误：comments错误的定义成了*[]Comment类型，所以传入Find后通过‘&’取到的是地址的地址
+err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("created_at desc").Find(&comments).Error
+修正：将comments定义为[]Comment
+err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("created_at desc").Find(&comments).Error
+
+二十二、删除用户后，该用户的评论是否需要删除，该用户的文章呢？？？？
+
+二十三、通过评论和撤销评论接口存在漏洞，
+问题：
+1.前端可以针对同一个评论多次post status参数，可能导致评论数一直增加或减少
+2.如果前端传入的status与当前status一样，则仍会操作一次数据库，该查询是无效查询，因为status没有变化，不需要更新
+
+解决：
+1.将两个接口整合为一个接口，添加validate验证，设置validate标签，oneof=0 1 2使前端传入的status必须为[0 1 2]中的一个
+2.如果前端传入的status与当前status一样，不更新直接返回
+3.如果是从其他状态变成状态1，则评论数+1，如果是从状态1变成其他状态，则评论数-1，其他情况不变

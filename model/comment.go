@@ -15,8 +15,9 @@ type Comment struct {
 	ArticleId int    `json:"article_id"`
 	Title     string `json:"title"`
 	Username  string `json:"username"`
-	Content   string `gorm:"type:varchar(500);not null" json:"content"` // 评论不能为空
-	Status    int8   `gorm:"tinyint;not null;default:2" json:"status"`  // 状态默认为2
+	Content   string `gorm:"type:varchar(500);not null" json:"content"`                       // 评论不能为空
+	Status    int8   `gorm:"tinyint;not null;default:2" validate:"oneof=0 1 2" json:"status"` // 状态默认为2，1表示审核通过，2表示待审核，
+	// 0表示审核不通过或被撤销
 }
 
 // CreateComment 新增评论
@@ -29,14 +30,14 @@ func CreateComment(data *Comment) int {
 		return constant.CreateCommentError
 	}
 
-	// 更新文章评论数
-	err = db.Model(&Article{}).Where("id = ?", data.ArticleId).UpdateColumn(
-		"comment_count", gorm.Expr("comment_count + ?", 1),
-	).Error
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.UpdateCommentCountError), err)
-		return constant.UpdateCommentCountError
-	}
+	// 更新文章评论数； TODO:评论和文章是否均需要审核？？？
+	//err = db.Model(&Article{}).Where("id = ?", data.ArticleId).UpdateColumn(
+	//	"comment_count", gorm.Expr("comment_count + ?", 1),
+	//).Error
+	//if err != nil {
+	//	utils.Logger.Error(constant.ConvertForLog(constant.UpdateCommentCountError), err)
+	//	return constant.UpdateCommentCountError
+	//}
 	return constant.SuccessCode
 }
 
@@ -61,8 +62,8 @@ func GetCommentCount(articleId int) (count int64, code int) {
 	return count, constant.SuccessCode
 }
 
-// GetCommentList 前端获取评论列表
-func GetCommentList(articleId, pageSize, pageNum int) (comments []Comment, total int64, code int) {
+// GetCommentListByArticleId 前端获取评论列表
+func GetCommentListByArticleId(articleId, pageSize, pageNum int) (comments []Comment, total int64, code int) {
 	err := db.Model(Comment{}).Where("article_id = ?", articleId).Count(&total).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.CountCommentError), err)
@@ -83,27 +84,65 @@ func GetCommentList(articleId, pageSize, pageNum int) (comments []Comment, total
 		"left join user on comment.user_id=user.id",
 	).Joins("left join article on comment.article_id=article.id").Scan(&comments).Error
 	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.GetCommentListByArticleIdError), err)
+		return comments, 0, constant.GetCommentListByArticleIdError
+	}
+	return comments, total, constant.SuccessCode
+}
+
+// GetCommentList 获取评论列表
+func GetCommentList(pageNum, pageSize int) (comments []Comment, total int64, code int) {
+	err := db.Limit(pageSize).Offset((pageNum - 1) * pageSize).Order("created_at desc").Find(&comments).Error
+	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.GetCommentListError), err)
+		return nil, 0, constant.GetCommentListError
+	}
+	err = db.Model(comments).Count(&total).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.GetCommentListError), err)
+		// TODO:返回评论列表但不返回评论数？？
 		return comments, 0, constant.GetCommentListError
 	}
 	return comments, total, constant.SuccessCode
 }
 
-// ApproveComment 通过评论
-func ApproveComment(id int, data *Comment) int {
+// UpdateCommentStatus 更新评论状态
+func UpdateCommentStatus(id int, data *Comment) int {
+	var comment Comment
+	// 判断评论是否存在
+	err := db.Where("id = ?", id).Take(&comment).Error
+	if err != nil {
+		utils.Logger.Error(constant.ConvertForLog(constant.CommentNotExistError), err)
+		return constant.CommentNotExistError
+	}
+	// 防止评论状态重复设置，一来可以避免无效的数据库查询，二来可以防止无效的设置导致的评论数自增
+	if data.Status == comment.Status {
+		utils.Logger.Error(constant.ConvertForLog(constant.CommentStatusRepeatSet))
+		return constant.CommentStatusRepeatSet
+	}
+
+	// 判断是增加评论数还是减少评论数,前面已经排除了传入的status和表中现有的status相同的情况
+	// 如果是从其他状态变成状态1，则评论数+1，如果是从状态1变成其他状态，则评论数-1，其他情况不变
+	var count int
+	if data.Status == 1 {
+		count = 1
+	} else if comment.Status == 1 {
+		count = -1
+	}
+	// 使用map，字段为零值也会更新
 	maps := map[string]interface{}{
 		"status": data.Status,
 	}
-	var comment Comment
+
 	// 更新评论状态
-	err := db.Model(&Comment{}).Where("id = ?", id).Updates(maps).Take(&comment).Error
+	err = db.Model(&comment).Updates(maps).Error
 	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ApproveCommentError), err)
-		return constant.ApproveCommentError
+		utils.Logger.Error(constant.ConvertForLog(constant.UpdateCommentStatusError), err)
+		return constant.UpdateCommentStatusError
 	}
-	// 将文章的评论数增加1
+	// 更新文章的评论数
 	err = db.Model(&Article{}).Where("id = ?", comment.ArticleId).UpdateColumn(
-		"comment_count", gorm.Expr("comment_count + ?", 1),
+		"comment_count", gorm.Expr("comment_count + ?", count),
 	).Error
 	if err != nil {
 		utils.Logger.Error(constant.ConvertForLog(constant.AddCommentCountError), err)
@@ -112,28 +151,28 @@ func ApproveComment(id int, data *Comment) int {
 	return constant.SuccessCode
 }
 
-// TakeDownComment 撤销审核
-func TakeDownComment(id int, data *Comment) int {
-	maps := map[string]interface{}{
-		"status": data.Status,
-	}
-	var comment Comment
-	// 更新status
-	err := db.Model(&Comment{}).Where("id = ?", id).Updates(maps).Take(&comment).Error
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.TakeDownCommentError), err)
-		return constant.TakeDownCommentError
-	}
-	// 评论数-1
-	err = db.Model(&Article{}).Where("id = ?", comment.ArticleId).UpdateColumn(
-		"comment_count", gorm.Expr("comment_count + ?", 1),
-	).Error
-	if err != nil {
-		utils.Logger.Error(constant.ConvertForLog(constant.ReduceCommentCountError), err)
-		return constant.ReduceCommentCountError
-	}
-	return constant.SuccessCode
-}
+//// TakeDownComment 撤销审核
+//func TakeDownComment(id int, data *Comment) int {
+//	maps := map[string]interface{}{
+//		"status": data.Status,
+//	}
+//	var comment Comment
+//	// 更新status
+//	err := db.Model(&Comment{}).Where("id = ?", id).Updates(maps).Take(&comment).Error
+//	if err != nil {
+//		utils.Logger.Error(constant.ConvertForLog(constant.TakeDownCommentError), err)
+//		return constant.TakeDownCommentError
+//	}
+//	// 评论数-1
+//	err = db.Model(&Article{}).Where("id = ?", comment.ArticleId).UpdateColumn(
+//		"comment_count", gorm.Expr("comment_count + ?", 1),
+//	).Error
+//	if err != nil {
+//		utils.Logger.Error(constant.ConvertForLog(constant.ReduceCommentCountError), err)
+//		return constant.ReduceCommentCountError
+//	}
+//	return constant.SuccessCode
+//}
 
 // DeleteComment 删除评论
 func DeleteComment(id int) int {
