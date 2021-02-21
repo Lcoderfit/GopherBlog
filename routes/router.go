@@ -13,6 +13,8 @@ import (
 // createMyRender 自定义渲染器
 func createMyRender() multitemplate.Renderer {
 	p := multitemplate.NewRenderer()
+	// 第一个参数用于设置HTML模板渲染的模板名称，可用于HTML函数的第二个参数
+	// 第二个参数表示模板文件的绝对路径
 	p.AddFromFiles("admin", "static/admin/index.html")
 	p.AddFromFiles("front", "static/admin/index.html")
 	return p
@@ -30,13 +32,15 @@ func InitRouter() {
 	r.Use(gin.Recovery())
 	// 支持跨域资源共享
 	r.Use(middleware.Cors())
-	// TODO: 第一个参数是URL路径，第二个参数是项目路径, 几个函数的区别是什么？？
-	//r.Static("/static", "/static/front/static")
-	//r.Static("/admin", "/static/admin")
-	//r.StaticFile("/favicon.ico", "/static/front/favicon.ico")
+	// 第一个参数是URL路径，第二个参数是静态资源的相对路径, 用于设置访问静态资源的URL
+	r.Static("/static", "/static/front/static")
+	r.Static("/admin", "/static/admin")
+	// 指定某个具体的文件为静态资源, 第一个参数仍然指的是URL路径，第二个是静态资源文件路径
+	r.StaticFile("/favicon.ico", "/static/front/favicon.ico")
 
 	// 用户主页路由
 	r.GET("/", func(c *gin.Context) {
+		// 实际上使用的是static/admin/index.html模板文件进行
 		c.HTML(http.StatusOK, "front", nil)
 	})
 
