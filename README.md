@@ -13,7 +13,9 @@
 5.缓存雪崩，缓存击穿
 6.grpc etcd go-micro
 7.管理系统，auth2鉴权，监控系统
-8.持续化集成
+8.持续化集成，ci/cd
+9.docker，k8s
+10.kafka，redis，rabbitmq
 
 三、
 前端页面开发-Vue
