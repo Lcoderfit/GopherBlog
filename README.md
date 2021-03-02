@@ -16,6 +16,7 @@
 8.持续化集成，ci/cd
 9.docker，k8s
 10.kafka，redis，rabbitmq
+11.通过点式导入包简化代码
 
 三、
 前端页面开发-Vue
