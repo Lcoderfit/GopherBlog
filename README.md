@@ -18,6 +18,7 @@
 10.kafka，redis，rabbitmq
 11.通过点式导入包简化代码
 12.goroutine优化
+13.管道，信号量，socket
 
 三、
 前端页面开发-Vue
